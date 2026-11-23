@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:denis_phote_world/core/constants/app_constants.dart';
@@ -8,8 +9,12 @@ import 'package:denis_phote_world/core/theme/app_colors.dart';
 import 'package:denis_phote_world/domain/entities/editor_models.dart';
 import 'package:denis_phote_world/domain/entities/photo_entity.dart';
 import 'package:denis_phote_world/features/editor/presentation/controllers/editor_controller.dart';
+import 'package:denis_phote_world/features/editor/presentation/widgets/greeting_card_modal.dart';
+import 'package:denis_phote_world/features/editor/presentation/widgets/photo_frame_painter.dart';
 import 'package:denis_phote_world/features/editor/presentation/widgets/web_size_picker_sheet.dart';
 import 'package:denis_phote_world/features/gallery/presentation/controllers/gallery_controller.dart';
+import 'package:denis_phote_world/shared/widgets/before_after_slider.dart';
+import 'package:denis_phote_world/shared/widgets/confetti_celebration.dart';
 
 class EditorScreen extends ConsumerStatefulWidget {
   final PhotoEntity? photo;
@@ -22,20 +27,39 @@ class EditorScreen extends ConsumerStatefulWidget {
 
 class _EditorScreenState extends ConsumerState<EditorScreen> {
   List<Offset> _currentPoints = [];
+  bool _isCelebrating = false;
 
   void _savePhoto() async {
+    HapticFeedback.mediumImpact();
     final editorNotifier = ref.read(editorControllerProvider(widget.photo).notifier);
     final saved = await editorNotifier.saveImage();
 
     if (saved != null && mounted) {
       ref.read(galleryControllerProvider.notifier).loadPhotos();
+      HapticFeedback.heavyImpact();
+
+      // Launch dazzling confetti celebration
+      setState(() {
+        _isCelebrating = true;
+      });
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('🎉 Foto erfolgreich gespeichert!')),
+        const SnackBar(
+          content: Text('🎉 Foto mit Glanz & Magie gespeichert!'),
+          backgroundColor: AppColors.pinkPrimary,
+          duration: Duration(seconds: 2),
+        ),
       );
-      if (context.canPop()) {
-        context.pop();
-      } else {
-        context.go('/');
+
+      // Short delay so child enjoys the celebratory confetti
+      await Future.delayed(const Duration(milliseconds: 1400));
+
+      if (mounted) {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/');
+        }
       }
     }
   }
@@ -101,6 +125,24 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           },
         ),
         actions: [
+          // Greeting Card Quick Trigger
+          IconButton(
+            icon: const Icon(Icons.mail_rounded, color: AppColors.pinkPrimary),
+            tooltip: 'Als Grußkarte gestalten 💌',
+            onPressed: () => GreetingCardModal.show(context, photo: photo),
+          ),
+          // Before / After Split Slider Toggle
+          IconButton(
+            icon: Icon(
+              Icons.compare_rounded,
+              color: editorState.showBeforeAfterComparison ? AppColors.yellowAccent : Colors.white70,
+            ),
+            tooltip: 'Vorher / Nachher Vergleich ↔️',
+            onPressed: () {
+              HapticFeedback.selectionClick();
+              editorNotifier.toggleBeforeAfter();
+            },
+          ),
           // Web-Size Quick Action Icon
           IconButton(
             icon: const Icon(Icons.public_rounded, color: AppColors.turquoiseSecondary),
@@ -111,12 +153,22 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           IconButton(
             icon: const Icon(Icons.undo_rounded, size: 22),
             tooltip: 'Rückgängig',
-            onPressed: editorState.strokes.isNotEmpty ? () => editorNotifier.undoStroke() : null,
+            onPressed: editorState.strokes.isNotEmpty
+                ? () {
+                    HapticFeedback.lightImpact();
+                    editorNotifier.undoStroke();
+                  }
+                : null,
           ),
           IconButton(
             icon: const Icon(Icons.redo_rounded, size: 22),
             tooltip: 'Wiederholen',
-            onPressed: editorState.undoneStrokes.isNotEmpty ? () => editorNotifier.redoStroke() : null,
+            onPressed: editorState.undoneStrokes.isNotEmpty
+                ? () {
+                    HapticFeedback.lightImpact();
+                    editorNotifier.redoStroke();
+                  }
+                : null,
           ),
           // Save Button
           Padding(
@@ -141,205 +193,74 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Active Web Preset Indicator Badge
-          if (editorState.targetWidth != null && editorState.targetHeight != null)
-            Container(
-              margin: const EdgeInsets.only(top: 4, bottom: 4),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.turquoiseSecondary.withValues(alpha: 0.22),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.turquoiseSecondary.withValues(alpha: 0.4)),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('🌐', style: TextStyle(fontSize: 14)),
-                  const SizedBox(width: 6),
-                  Text(
-                    'Web-Größe: ${editorState.selectedWebPreset?.title ?? 'Benutzerdefiniert'} (${editorState.targetWidth} × ${editorState.targetHeight} px)',
-                    style: const TextStyle(
-                      color: AppColors.turquoiseLight,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 12,
+      body: ConfettiCelebration(
+        isPlaying: _isCelebrating,
+        onFinished: () => setState(() => _isCelebrating = false),
+        child: Column(
+          children: [
+            // Active Web Preset Indicator Badge
+            if (editorState.targetWidth != null && editorState.targetHeight != null)
+              Container(
+                margin: const EdgeInsets.only(top: 4, bottom: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.turquoiseSecondary.withValues(alpha: 0.22),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.turquoiseSecondary.withValues(alpha: 0.4)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('🌐', style: TextStyle(fontSize: 13)),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Web-Größe: ${editorState.selectedWebPreset?.title ?? 'Benutzerdefiniert'} (${editorState.targetWidth} × ${editorState.targetHeight} px)',
+                      style: const TextStyle(
+                        color: AppColors.turquoiseLight,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 11,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: () {
-                      editorNotifier.applyCustomSize(photo.width, photo.height);
-                      editorNotifier.setCropRatio(CropAspectRatio.free);
-                    },
-                    child: const Icon(Icons.close_rounded, size: 16, color: Colors.white70),
-                  ),
-                ],
-              ),
-            ),
-
-          // Canvas Area
-          Expanded(
-            child: Center(
-              child: RotatedBox(
-                quarterTurns: (editorState.rotationDegrees / 90).round() % 4,
-                child: Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.identity()
-                    ..scale(
-                      editorState.flipHorizontal ? -1.0 : 1.0,
-                      editorState.flipVertical ? -1.0 : 1.0,
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () {
+                        editorNotifier.applyCustomSize(photo.width, photo.height);
+                        editorNotifier.setCropRatio(CropAspectRatio.free);
+                      },
+                      child: const Icon(Icons.close_rounded, size: 15, color: Colors.white70),
                     ),
-                  child: AspectRatio(
-                    aspectRatio: editorState.cropRatio.numericRatio ??
-                        (photo.width > 0 && photo.height > 0 ? photo.width / photo.height : 1.0),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        // Base Photo
-                        _buildEditorImage(photo, editorState),
+                  ],
+                ),
+              ),
 
-                        // Drawing Layer (Painter)
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onPanStart: (details) {
-                            if (editorState.activeTool == EditorActiveTool.draw) {
-                              setState(() {
-                                _currentPoints = [details.localPosition];
-                              });
-                            }
-                          },
-                          onPanUpdate: (details) {
-                            if (editorState.activeTool == EditorActiveTool.draw) {
-                              setState(() {
-                                _currentPoints.add(details.localPosition);
-                              });
-                            }
-                          },
-                          onPanEnd: (details) {
-                            if (editorState.activeTool == EditorActiveTool.draw && _currentPoints.isNotEmpty) {
-                              editorNotifier.addStroke(
-                                DrawingStroke(
-                                  points: List.from(_currentPoints),
-                                  color: editorState.currentDrawColor,
-                                  strokeWidth: editorState.currentBrushSize,
-                                  toolType: editorState.currentToolType,
-                                ),
-                              );
-                              setState(() {
-                                _currentPoints = [];
-                              });
-                            }
-                          },
-                          child: CustomPaint(
-                            painter: _EditorDrawingPainter(
-                              strokes: editorState.strokes,
-                              currentStrokePoints: _currentPoints,
-                              currentColor: editorState.currentDrawColor,
-                              currentWidth: editorState.currentBrushSize,
-                              currentType: editorState.currentToolType,
-                            ),
-                          ),
-                        ),
-
-                        // Interactive Text Overlays
-                        ...editorState.textOverlays.map((item) {
-                          return Positioned(
-                            left: item.position.dx,
-                            top: item.position.dy,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                setState(() {
-                                  item.position += details.delta;
-                                });
-                              },
-                              child: Transform.rotate(
-                                angle: item.rotation,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black26,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(color: Colors.white38),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        item.text,
-                                        style: TextStyle(
-                                          color: item.color,
-                                          fontSize: item.fontSize,
-                                          fontWeight: FontWeight.bold,
-                                          shadows: item.hasShadow
-                                              ? const [Shadow(blurRadius: 4, color: Colors.black)]
-                                              : null,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 6),
-                                      GestureDetector(
-                                        onTap: () => editorNotifier.removeTextOverlay(item.id),
-                                        child: const Icon(Icons.cancel, color: Colors.white70, size: 18),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-
-                        // Interactive Stickers (Scale, Rotate, Drag)
-                        ...editorState.stickers.map((sticker) {
-                          return Positioned(
-                            left: sticker.position.dx,
-                            top: sticker.position.dy,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                setState(() {
-                                  sticker.position += details.delta;
-                                });
-                              },
-                              child: Transform.rotate(
-                                angle: sticker.rotation,
-                                child: Transform.scale(
-                                  scale: sticker.scale,
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      Text(
-                                        sticker.emojiOrAsset,
-                                        style: const TextStyle(fontSize: 48),
-                                      ),
-                                      Positioned(
-                                        right: -10,
-                                        top: -10,
-                                        child: GestureDetector(
-                                          onTap: () => editorNotifier.removeSticker(sticker.id),
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              color: Colors.redAccent,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: const Icon(Icons.close, color: Colors.white, size: 16),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                      ],
+            // Canvas Area
+            Expanded(
+              child: Center(
+                child: RotatedBox(
+                  quarterTurns: (editorState.rotationDegrees / 90).round() % 4,
+                  child: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.identity()
+                      ..scale(
+                        editorState.flipHorizontal ? -1.0 : 1.0,
+                        editorState.flipVertical ? -1.0 : 1.0,
+                      ),
+                    child: AspectRatio(
+                      aspectRatio: editorState.cropRatio.numericRatio ??
+                          (photo.width > 0 && photo.height > 0 ? photo.width / photo.height : 1.0),
+                      child: editorState.showBeforeAfterComparison
+                          ? BeforeAfterSlider(
+                              beforeWidget: _buildRawImage(photo),
+                              afterWidget: _buildEditorCanvasStack(photo, editorState, editorNotifier),
+                            )
+                          : _buildEditorCanvasStack(photo, editorState, editorNotifier),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: Container(
         color: const Color(0xFF1E1C24),
@@ -360,13 +281,231 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     );
   }
 
+  Widget _buildEditorCanvasStack(PhotoEntity photo, EditorState editorState, EditorNotifier editorNotifier) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // Base Photo with adjustments & filters
+        _buildEditorImage(photo, editorState),
+
+        // Drawing Layer (Painter)
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onPanStart: (details) {
+            if (editorState.activeTool == EditorActiveTool.draw) {
+              setState(() {
+                _currentPoints = [details.localPosition];
+              });
+            }
+          },
+          onPanUpdate: (details) {
+            if (editorState.activeTool == EditorActiveTool.draw) {
+              setState(() {
+                _currentPoints.add(details.localPosition);
+              });
+            }
+          },
+          onPanEnd: (details) {
+            if (editorState.activeTool == EditorActiveTool.draw && _currentPoints.isNotEmpty) {
+              editorNotifier.addStroke(
+                DrawingStroke(
+                  points: List.from(_currentPoints),
+                  color: editorState.currentDrawColor,
+                  strokeWidth: editorState.currentBrushSize,
+                  toolType: editorState.currentToolType,
+                ),
+              );
+              setState(() {
+                _currentPoints = [];
+              });
+            }
+          },
+          child: CustomPaint(
+            painter: _EditorDrawingPainter(
+              strokes: editorState.strokes,
+              currentStrokePoints: _currentPoints,
+              currentColor: editorState.currentDrawColor,
+              currentWidth: editorState.currentBrushSize,
+              currentType: editorState.currentToolType,
+            ),
+          ),
+        ),
+
+        // Interactive Text Overlays & Speech Bubbles
+        ...editorState.textOverlays.map((item) {
+          return Positioned(
+            left: item.position.dx,
+            top: item.position.dy,
+            child: GestureDetector(
+              onPanUpdate: (details) {
+                setState(() {
+                  item.position += details.delta;
+                });
+              },
+              child: Transform.rotate(
+                angle: item.rotation,
+                child: _buildTextOrBubbleWidget(item, editorNotifier),
+              ),
+            ),
+          );
+        }),
+
+        // Interactive Stickers (Scale, Rotate, Drag)
+        ...editorState.stickers.map((sticker) {
+          return Positioned(
+            left: sticker.position.dx,
+            top: sticker.position.dy,
+            child: GestureDetector(
+              onPanUpdate: (details) {
+                setState(() {
+                  sticker.position += details.delta;
+                });
+              },
+              child: Transform.rotate(
+                angle: sticker.rotation,
+                child: Transform.scale(
+                  scale: sticker.scale,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Text(
+                        sticker.emojiOrAsset,
+                        style: const TextStyle(fontSize: 48),
+                      ),
+                      Positioned(
+                        right: -10,
+                        top: -10,
+                        child: GestureDetector(
+                          onTap: () => editorNotifier.removeSticker(sticker.id),
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.redAccent,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.close, color: Colors.white, size: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
+
+        // Magic Photo Frame Layer (CustomPainter)
+        if (editorState.selectedFrame != null && editorState.selectedFrame!.type != PhotoFrameType.none)
+          IgnorePointer(
+            child: CustomPaint(
+              painter: PhotoFramePainter(
+                frameType: editorState.selectedFrame!.type,
+                borderWidth: 26.0,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildTextOrBubbleWidget(TextOverlay item, EditorNotifier notifier) {
+    if (item.bubbleType == SpeechBubbleType.comic || item.bubbleType == SpeechBubbleType.cloud) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: item.bubbleColor ?? Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Colors.black, width: 2.5),
+          boxShadow: const [
+            BoxShadow(color: Colors.black38, blurRadius: 6, offset: Offset(2, 3)),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              item.text,
+              style: TextStyle(
+                color: item.color,
+                fontSize: item.fontSize,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(width: 6),
+            GestureDetector(
+              onTap: () => notifier.removeTextOverlay(item.id),
+              child: const Icon(Icons.cancel, color: Colors.black54, size: 18),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.black45,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white38),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            item.text,
+            style: TextStyle(
+              color: item.color,
+              fontSize: item.fontSize,
+              fontWeight: FontWeight.bold,
+              shadows: item.hasShadow ? const [Shadow(blurRadius: 4, color: Colors.black)] : null,
+            ),
+          ),
+          const SizedBox(width: 6),
+          GestureDetector(
+            onTap: () => notifier.removeTextOverlay(item.id),
+            child: const Icon(Icons.cancel, color: Colors.white70, size: 18),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRawImage(PhotoEntity photo) {
+    final file = File(photo.filePath);
+    if (!kIsWeb && file.existsSync()) {
+      return Image.file(file, fit: BoxFit.contain);
+    }
+    return Container(
+      color: Colors.grey[900],
+      child: const Center(child: Icon(Icons.image, color: Colors.white30, size: 64)),
+    );
+  }
+
   Widget _buildEditorImage(PhotoEntity photo, EditorState state) {
     final file = File(photo.filePath);
     if (!kIsWeb && file.existsSync()) {
-      return ColorFiltered(
-        colorFilter: _buildColorFilter(state.colorAdjustments),
-        child: Image.file(file, fit: BoxFit.contain),
-      );
+      Widget imageWidget = Image.file(file, fit: BoxFit.contain);
+
+      // Malbuch-Modus (Coloring outline) preview
+      if (state.activeFilterPreset == 'coloring' || state.activeFilterPreset == 'Malbuch 🖍️') {
+        // High contrast edge outline simulation in preview
+        imageWidget = ColorFiltered(
+          colorFilter: const ColorFilter.matrix(<double>[
+            -2.0, -2.0, -2.0, 0, 255,
+            -2.0, -2.0, -2.0, 0, 255,
+            -2.0, -2.0, -2.0, 0, 255,
+            0, 0, 0, 1, 0,
+          ]),
+          child: imageWidget,
+        );
+      } else {
+        imageWidget = ColorFiltered(
+          colorFilter: _buildColorFilter(state.colorAdjustments),
+          child: imageWidget,
+        );
+      }
+
+      return imageWidget;
     }
     return Container(
       color: Colors.grey[850],
@@ -402,6 +541,12 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
               onTap: () => _openWebSizePicker(context, state, notifier),
             ),
             _buildToolItem(
+              icon: Icons.photo_size_select_actual_rounded,
+              label: 'Rahmen 🖼️',
+              isActive: state.activeTool == EditorActiveTool.frames,
+              onTap: () => notifier.setActiveTool(EditorActiveTool.frames),
+            ),
+            _buildToolItem(
               icon: Icons.crop_rounded,
               label: 'Zuschneiden',
               isActive: state.activeTool == EditorActiveTool.crop,
@@ -414,8 +559,8 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
               onTap: () => notifier.setActiveTool(EditorActiveTool.draw),
             ),
             _buildToolItem(
-              icon: Icons.text_fields_rounded,
-              label: 'Text 🔤',
+              icon: Icons.chat_bubble_rounded,
+              label: 'Sprechblasen 💬',
               isActive: state.activeTool == EditorActiveTool.text,
               onTap: () => notifier.setActiveTool(EditorActiveTool.text),
             ),
@@ -426,7 +571,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
               onTap: () => notifier.setActiveTool(EditorActiveTool.stickers),
             ),
             _buildToolItem(
-              icon: Icons.filter_vintage_rounded,
+              icon: Icons.auto_awesome_rounded,
               label: 'Filter 🪄',
               isActive: state.activeTool == EditorActiveTool.filters,
               onTap: () => notifier.setActiveTool(EditorActiveTool.filters),
@@ -462,7 +607,10 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     required VoidCallback onTap,
   }) {
     return InkWell(
-      onTap: onTap,
+      onTap: () {
+        HapticFeedback.selectionClick();
+        onTap();
+      },
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -502,6 +650,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (state.activeTool == EditorActiveTool.frames) _buildFrameOptions(state, notifier),
           if (state.activeTool == EditorActiveTool.crop) _buildCropOptions(state, notifier),
           if (state.activeTool == EditorActiveTool.draw) _buildDrawingOptions(state, notifier),
           if (state.activeTool == EditorActiveTool.text) _buildTextOptions(notifier),
@@ -509,6 +658,57 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           if (state.activeTool == EditorActiveTool.filters) _buildFilterOptions(state, notifier),
           if (state.activeTool == EditorActiveTool.adjust) _buildAdjustmentSliders(state, notifier),
         ],
+      ),
+    );
+  }
+
+  Widget _buildFrameOptions(EditorState state, EditorNotifier notifier) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: PhotoFramePresets.all.map((preset) {
+          final isSelected = state.selectedFrame?.id == preset.id ||
+              (state.selectedFrame == null && preset.type == PhotoFrameType.none);
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: InkWell(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                notifier.setFrame(preset.type == PhotoFrameType.none ? null : preset);
+              },
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: BoxDecoration(
+                  gradient: preset.type != PhotoFrameType.none
+                      ? LinearGradient(colors: preset.gradientColors)
+                      : null,
+                  color: preset.type == PhotoFrameType.none ? Colors.white12 : null,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: isSelected ? Colors.white : Colors.white24,
+                    width: isSelected ? 2.5 : 1.0,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Text(preset.emoji, style: const TextStyle(fontSize: 20)),
+                    const SizedBox(width: 6),
+                    Text(
+                      preset.title,
+                      style: TextStyle(
+                        color: preset.type == PhotoFrameType.space ? Colors.white : Colors.black87,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -630,31 +830,78 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
 
   Widget _buildTextOptions(EditorNotifier notifier) {
     final textController = TextEditingController();
-    return Row(
+    final quickBubbles = [
+      'BÄM! 💥',
+      'Hallo! 👋',
+      'Wuff! 🐶',
+      'Miau! 🐱',
+      'Hab dich lieb! ❤️',
+      'Superstar! ⭐',
+      'Hurra! 🎉',
+    ];
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: TextField(
-            controller: textController,
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: 'Schreibe einen Text...',
-              hintStyle: const TextStyle(color: Colors.white54),
-              filled: true,
-              fillColor: Colors.black26,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-            ),
+        // Quick Comic Bubbles
+        const Text(
+          'Schnelle Sprechblasen 💬:',
+          style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 6),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: quickBubbles.map((phrase) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: ActionChip(
+                  backgroundColor: AppColors.pinkPrimary.withValues(alpha: 0.25),
+                  side: const BorderSide(color: AppColors.pinkPrimary),
+                  label: Text(phrase, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    notifier.addSpeechBubble(phrase, SpeechBubbleType.comic);
+                  },
+                ),
+              );
+            }).toList(),
           ),
         ),
-        const SizedBox(width: 8),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: AppColors.pinkPrimary),
-          onPressed: () {
-            if (textController.text.trim().isNotEmpty) {
-              notifier.addTextOverlay(textController.text.trim());
-              textController.clear();
-            }
-          },
-          child: const Text('Hinzufügen', style: TextStyle(color: Colors.white)),
+        const SizedBox(height: 10),
+
+        // Custom Text input
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: textController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'Eigenen Text oder Sprechblase...',
+                  hintStyle: const TextStyle(color: Colors.white54),
+                  filled: true,
+                  fillColor: Colors.black26,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.pinkPrimary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              onPressed: () {
+                if (textController.text.trim().isNotEmpty) {
+                  notifier.addSpeechBubble(textController.text.trim(), SpeechBubbleType.comic);
+                  textController.clear();
+                }
+              },
+              child: const Text('💬 Blase', style: TextStyle(color: Colors.white)),
+            ),
+          ],
         ),
       ],
     );
@@ -681,7 +928,10 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
                   child: Row(
                     children: stickers.map((emoji) {
                       return GestureDetector(
-                        onTap: () => notifier.addSticker(emoji),
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          notifier.addSticker(emoji);
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(emoji, style: const TextStyle(fontSize: 38)),
@@ -699,19 +949,35 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
   }
 
   Widget _buildFilterOptions(EditorState state, EditorNotifier notifier) {
-    final presets = ['Original', 'KidsPop', 'Vintage', 'BW', 'Cool', 'Warm'];
+    final presets = ['Original', 'Malbuch 🖍️', 'KidsPop', 'Vintage', 'BW', 'Cool', 'Warm'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: presets.map((p) {
-          final isSelected = state.activeFilterPreset == p || (p == 'Original' && state.activeFilterPreset == null);
+          final isSelected = state.activeFilterPreset == p ||
+              (p == 'Malbuch 🖍️' && state.activeFilterPreset == 'coloring') ||
+              (p == 'Original' && state.activeFilterPreset == null);
+
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6),
             child: ChoiceChip(
               label: Text(p),
               selected: isSelected,
-              selectedColor: AppColors.purpleAccent,
-              onSelected: (_) => notifier.applyFilterPreset(p == 'Original' ? null : p),
+              selectedColor: p == 'Malbuch 🖍️' ? AppColors.yellowAccent : AppColors.purpleAccent,
+              labelStyle: TextStyle(
+                color: isSelected && p == 'Malbuch 🖍️' ? Colors.black87 : Colors.white,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+              onSelected: (_) {
+                HapticFeedback.selectionClick();
+                if (p == 'Original') {
+                  notifier.applyFilterPreset(null);
+                } else if (p == 'Malbuch 🖍️') {
+                  notifier.applyFilterPreset('coloring');
+                } else {
+                  notifier.applyFilterPreset(p);
+                }
+              },
             ),
           );
         }).toList(),

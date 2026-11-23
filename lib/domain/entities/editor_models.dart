@@ -201,6 +201,14 @@ class DrawingStroke {
   }
 }
 
+enum SpeechBubbleType {
+  none,
+  comic,
+  cloud,
+  shout,
+  heart,
+}
+
 class TextOverlay {
   final String id;
   String text;
@@ -210,6 +218,8 @@ class TextOverlay {
   double rotation;
   bool hasShadow;
   String fontFamily;
+  SpeechBubbleType bubbleType;
+  Color? bubbleColor;
 
   TextOverlay({
     required this.id,
@@ -220,7 +230,99 @@ class TextOverlay {
     this.rotation = 0.0,
     this.hasShadow = true,
     this.fontFamily = 'Roboto',
+    this.bubbleType = SpeechBubbleType.none,
+    this.bubbleColor,
   });
+}
+
+/// Kindgerechte Rahmen-Themen
+enum PhotoFrameType {
+  none,
+  unicorn,
+  space,
+  beach,
+  birthday,
+  nature,
+  comic,
+}
+
+class PhotoFramePreset {
+  final String id;
+  final String title;
+  final String subtitle;
+  final String emoji;
+  final PhotoFrameType type;
+  final List<Color> gradientColors;
+
+  const PhotoFramePreset({
+    required this.id,
+    required this.title,
+    required this.subtitle,
+    required this.emoji,
+    required this.type,
+    required this.gradientColors,
+  });
+}
+
+class PhotoFramePresets {
+  static const List<PhotoFramePreset> all = [
+    PhotoFramePreset(
+      id: 'frame_none',
+      title: 'Ohne Rahmen',
+      subtitle: 'Originalfoto ohne Rand',
+      emoji: '❌',
+      type: PhotoFrameType.none,
+      gradientColors: [Colors.transparent, Colors.transparent],
+    ),
+    PhotoFramePreset(
+      id: 'frame_unicorn',
+      title: 'Einhorn Glitzer',
+      subtitle: 'Pastell-Regenbogen, Sterne & Zauberglanz',
+      emoji: '🦄',
+      type: PhotoFrameType.unicorn,
+      gradientColors: [Color(0xFFFFB6C1), Color(0xFFE6E6FA), Color(0xFFB5EAD7)],
+    ),
+    PhotoFramePreset(
+      id: 'frame_space',
+      title: 'Weltraum Rakete',
+      subtitle: 'Galaxie, Planeten & glänzende Kometen',
+      emoji: '🚀',
+      type: PhotoFrameType.space,
+      gradientColors: [Color(0xFF2E0854), Color(0xFF4A0E4E), Color(0xFF0F3460)],
+    ),
+    PhotoFramePreset(
+      id: 'frame_beach',
+      title: 'Sommerstrand',
+      subtitle: 'Meereswellen, Muscheln & Sonnenschein',
+      emoji: '🏖️',
+      type: PhotoFrameType.beach,
+      gradientColors: [Color(0xFF48CAE4), Color(0xFFF3C68F), Color(0xFFFFD166)],
+    ),
+    PhotoFramePreset(
+      id: 'frame_birthday',
+      title: 'Geburtstagsparty',
+      subtitle: 'Wimpelkette, Luftballons & Konfetti',
+      emoji: '🎂',
+      type: PhotoFrameType.birthday,
+      gradientColors: [Color(0xFFFF5964), Color(0xFFFFE74C), Color(0xFF35A7FF)],
+    ),
+    PhotoFramePreset(
+      id: 'frame_nature',
+      title: 'Zauberwald',
+      subtitle: 'Bunte Blumen, Blätter & Marienkäfer',
+      emoji: '🌸',
+      type: PhotoFrameType.nature,
+      gradientColors: [Color(0xFF70C1B3), Color(0xFFB2DBBF), Color(0xFFF3FFBD)],
+    ),
+    PhotoFramePreset(
+      id: 'frame_comic',
+      title: 'Comic Hero',
+      subtitle: 'Pop-Art Punkte, Zacken & Action-Style',
+      emoji: '💥',
+      type: PhotoFrameType.comic,
+      gradientColors: [Color(0xFFFF0055), Color(0xFFFFCC00), Color(0xFF00DDFF)],
+    ),
+  ];
 }
 
 class StickerItem {

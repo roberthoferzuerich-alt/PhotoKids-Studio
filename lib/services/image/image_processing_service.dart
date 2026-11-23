@@ -101,6 +101,12 @@ class ImageProcessingService {
         case 'blackandwhite':
           image = img.grayscale(image);
           break;
+        case 'coloring':
+        case 'malbuch':
+          image = img.grayscale(image);
+          image = img.sobel(image, amount: 1.5);
+          image = img.invert(image);
+          break;
         case 'cool':
           image = img.colorOffset(image, blue: 30, red: -15);
           break;

@@ -61,5 +61,35 @@ void main() {
       expect(story.width, equals(1080));
       expect(story.height, equals(1920));
     });
+
+    test('PhotoFramePresets contains all magical kid frame presets', () {
+      expect(PhotoFramePresets.all.isNotEmpty, isTrue);
+      final types = PhotoFramePresets.all.map((f) => f.type).toList();
+      expect(types, contains(PhotoFrameType.none));
+      expect(types, contains(PhotoFrameType.unicorn));
+      expect(types, contains(PhotoFrameType.space));
+      expect(types, contains(PhotoFrameType.beach));
+      expect(types, contains(PhotoFrameType.birthday));
+      expect(types, contains(PhotoFrameType.nature));
+      expect(types, contains(PhotoFrameType.comic));
+
+      final unicorn = PhotoFramePresets.all.firstWhere((f) => f.type == PhotoFrameType.unicorn);
+      expect(unicorn.emoji, equals('🦄'));
+      expect(unicorn.gradientColors.isNotEmpty, isTrue);
+    });
+
+    test('TextOverlay supports speech bubble types', () {
+      final bubble = TextOverlay(
+        id: '123',
+        text: 'BÄM! 💥',
+        position: const Offset(10, 20),
+        bubbleType: SpeechBubbleType.comic,
+        bubbleColor: Colors.yellow,
+      );
+
+      expect(bubble.text, equals('BÄM! 💥'));
+      expect(bubble.bubbleType, equals(SpeechBubbleType.comic));
+      expect(bubble.bubbleColor, equals(Colors.yellow));
+    });
   });
 }

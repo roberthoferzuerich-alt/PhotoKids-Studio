@@ -13,6 +13,7 @@ enum EditorActiveTool {
   none,
   crop,
   webSize,
+  frames,
   filters,
   draw,
   text,
@@ -26,6 +27,8 @@ class EditorState {
   final EditorActiveTool activeTool;
   final CropAspectRatio cropRatio;
   final WebPhotoPreset? selectedWebPreset;
+  final PhotoFramePreset? selectedFrame;
+  final bool showBeforeAfterComparison;
   final int? targetWidth;
   final int? targetHeight;
   final List<DrawingStroke> strokes;
@@ -48,6 +51,8 @@ class EditorState {
     this.activeTool = EditorActiveTool.none,
     this.cropRatio = CropAspectRatio.free,
     this.selectedWebPreset,
+    this.selectedFrame,
+    this.showBeforeAfterComparison = false,
     this.targetWidth,
     this.targetHeight,
     this.strokes = const [],
@@ -71,6 +76,8 @@ class EditorState {
     EditorActiveTool? activeTool,
     CropAspectRatio? cropRatio,
     WebPhotoPreset? selectedWebPreset,
+    PhotoFramePreset? selectedFrame,
+    bool? showBeforeAfterComparison,
     int? targetWidth,
     int? targetHeight,
     List<DrawingStroke>? strokes,
@@ -93,6 +100,8 @@ class EditorState {
       activeTool: activeTool ?? this.activeTool,
       cropRatio: cropRatio ?? this.cropRatio,
       selectedWebPreset: selectedWebPreset ?? this.selectedWebPreset,
+      selectedFrame: selectedFrame ?? this.selectedFrame,
+      showBeforeAfterComparison: showBeforeAfterComparison ?? this.showBeforeAfterComparison,
       targetWidth: targetWidth ?? this.targetWidth,
       targetHeight: targetHeight ?? this.targetHeight,
       strokes: strokes ?? this.strokes,
@@ -185,14 +194,28 @@ class EditorNotifier extends StateNotifier<EditorState> {
     state = state.copyWith(strokes: [], undoneStrokes: []);
   }
 
-  void addTextOverlay(String text, {Color color = Colors.white}) {
+  void setFrame(PhotoFramePreset? frame) {
+    state = state.copyWith(selectedFrame: frame);
+  }
+
+  void toggleBeforeAfter() {
+    state = state.copyWith(showBeforeAfterComparison: !state.showBeforeAfterComparison);
+  }
+
+  void addTextOverlay(String text, {Color color = Colors.white, SpeechBubbleType bubbleType = SpeechBubbleType.none, Color? bubbleColor}) {
     final overlay = TextOverlay(
       id: const Uuid().v4(),
       text: text,
       position: const Offset(120, 180),
       color: color,
+      bubbleType: bubbleType,
+      bubbleColor: bubbleColor,
     );
     state = state.copyWith(textOverlays: [...state.textOverlays, overlay]);
+  }
+
+  void addSpeechBubble(String text, SpeechBubbleType bubbleType, {Color? bubbleColor, Color textColor = Colors.black87}) {
+    addTextOverlay(text, color: textColor, bubbleType: bubbleType, bubbleColor: bubbleColor ?? Colors.white);
   }
 
   void removeTextOverlay(String id) {
