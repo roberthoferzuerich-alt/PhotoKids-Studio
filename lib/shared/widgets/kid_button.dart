@@ -33,7 +33,7 @@ class KidButton extends StatelessWidget {
           backgroundColor: bg,
           foregroundColor: fg,
           elevation: 5,
-          shadowColor: bg.withOpacity(0.4),
+          shadowColor: bg.withValues(alpha: 0.4),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),

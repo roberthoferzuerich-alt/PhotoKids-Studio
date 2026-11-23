@@ -7,13 +7,37 @@ import 'package:denis_phote_world/features/gallery/presentation/screens/gallery_
 import 'package:denis_phote_world/features/settings/presentation/screens/settings_screen.dart';
 import 'package:denis_phote_world/features/slideshow/presentation/screens/slideshow_screen.dart';
 import 'package:denis_phote_world/features/viewer/presentation/screens/viewer_screen.dart';
+import 'package:denis_phote_world/shared/widgets/main_navigation_shell.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const GalleryScreen(),
+    ShellRoute(
+      builder: (context, state, child) {
+        return MainNavigationShell(child: child);
+      },
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const GalleryScreen(),
+        ),
+        GoRoute(
+          path: '/albums',
+          builder: (context, state) => const AlbumsScreen(),
+        ),
+        GoRoute(
+          path: '/slideshow',
+          builder: (context, state) => const SlideshowScreen(),
+        ),
+        GoRoute(
+          path: '/settings',
+          builder: (context, state) => const SettingsScreen(),
+        ),
+        GoRoute(
+          path: '/cloud',
+          builder: (context, state) => const CloudScreen(),
+        ),
+      ],
     ),
     GoRoute(
       path: '/viewer',
@@ -28,22 +52,6 @@ final appRouter = GoRouter(
         final photo = state.extra as PhotoEntity?;
         return EditorScreen(photo: photo);
       },
-    ),
-    GoRoute(
-      path: '/albums',
-      builder: (context, state) => const AlbumsScreen(),
-    ),
-    GoRoute(
-      path: '/slideshow',
-      builder: (context, state) => const SlideshowScreen(),
-    ),
-    GoRoute(
-      path: '/settings',
-      builder: (context, state) => const SettingsScreen(),
-    ),
-    GoRoute(
-      path: '/cloud',
-      builder: (context, state) => const CloudScreen(),
     ),
   ],
 );

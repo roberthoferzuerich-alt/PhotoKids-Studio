@@ -97,7 +97,7 @@ class _ParentalGateDialogState extends ConsumerState<ParentalGateDialog> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               decoration: BoxDecoration(
-                color: AppColors.yellowAccent.withOpacity(0.2),
+                color: AppColors.yellowAccent.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Center(

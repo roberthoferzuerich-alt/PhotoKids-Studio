@@ -44,7 +44,7 @@ class AlbumsScreen extends ConsumerWidget {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColors.pinkPrimary.withOpacity(0.3) : Colors.transparent,
+                        color: isSelected ? AppColors.pinkPrimary.withValues(alpha: 0.3) : Colors.transparent,
                         shape: BoxShape.circle,
                         border: isSelected ? Border.all(color: AppColors.pinkPrimary, width: 2) : null,
                       ),
@@ -61,7 +61,10 @@ class AlbumsScreen extends ConsumerWidget {
               child: const Text('Abbrechen'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.pinkPrimary, foregroundColor: Colors.white),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.pinkPrimary,
+                foregroundColor: Colors.white,
+              ),
               onPressed: () {
                 final name = nameController.text.trim();
                 if (name.isNotEmpty) {
@@ -80,8 +83,11 @@ class AlbumsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final albumsState = ref.watch(albumsControllerProvider);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.bgDark : AppColors.bgLight,
       appBar: AppBar(
         title: const Text('Meine Foto-Alben 📚'),
       ),
@@ -107,68 +113,113 @@ class AlbumsScreen extends ConsumerWidget {
                   ),
                 )
               : GridView.builder(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 85),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 14,
                     childAspectRatio: 0.95,
                   ),
                   itemCount: albumsState.albums.length,
                   itemBuilder: (context, index) {
                     final album = albumsState.albums[index];
-                    return _buildAlbumCard(context, ref, album);
+                    return _buildAlbumCard(context, ref, album, isDark);
                   },
                 ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: AppColors.turquoiseSecondary,
-        icon: const Icon(Icons.create_new_folder_rounded, size: 28),
-        label: const Text('Neues Album', style: TextStyle(fontWeight: FontWeight.bold)),
-        onPressed: () => _showCreateAlbumDialog(context, ref),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          gradient: AppColors.turquoiseGradient,
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.turquoiseSecondary.withValues(alpha: 0.4),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: FloatingActionButton.extended(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          icon: const Icon(Icons.create_new_folder_rounded, size: 24),
+          label: const Text('Neues Album', style: TextStyle(fontWeight: FontWeight.w800)),
+          onPressed: () => _showCreateAlbumDialog(context, ref),
+        ),
       ),
     );
   }
 
-  Widget _buildAlbumCard(BuildContext context, WidgetRef ref, AlbumEntity album) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: InkWell(
+  Widget _buildAlbumCard(BuildContext context, WidgetRef ref, AlbumEntity album, bool isDark) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF282035) : Colors.white,
         borderRadius: BorderRadius.circular(24),
-        onTap: () {
-          ref.read(galleryControllerProvider.notifier).setFilterTab(GalleryFilterTab.album, albumId: album.id);
-          context.pop();
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  color: AppColors.turquoiseLight.withOpacity(0.3),
-                  shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.08),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () {
+            ref.read(galleryControllerProvider.notifier).setFilterTab(GalleryFilterTab.album, albumId: album.id);
+            context.go('/');
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 76,
+                  height: 76,
+                  decoration: BoxDecoration(
+                    color: AppColors.turquoiseSoft,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.turquoiseSecondary.withValues(alpha: 0.2),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(album.iconEmoji, style: const TextStyle(fontSize: 40)),
+                  ),
                 ),
-                child: Center(
-                  child: Text(album.iconEmoji, style: const TextStyle(fontSize: 38)),
+                const SizedBox(height: 14),
+                Text(
+                  album.name,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                album.name,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '${album.photoCount} Fotos',
-                style: const TextStyle(color: Colors.grey, fontSize: 13),
-              ),
-            ],
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: AppColors.turquoiseSecondary.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '${album.photoCount} Fotos',
+                    style: const TextStyle(
+                      color: AppColors.turquoiseDark,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

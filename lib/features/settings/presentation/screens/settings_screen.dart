@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:denis_phote_world/core/di/app_providers.dart';
 import 'package:denis_phote_world/core/theme/app_colors.dart';
+import 'package:denis_phote_world/core/utils/sample_data_seeder.dart';
+import 'package:denis_phote_world/features/gallery/presentation/controllers/gallery_controller.dart';
 import 'package:denis_phote_world/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:denis_phote_world/shared/widgets/parental_gate_dialog.dart';
 
@@ -28,6 +31,7 @@ class SettingsScreen extends ConsumerWidget {
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Abbrechen')),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.pinkPrimary, foregroundColor: Colors.white),
             onPressed: () {
               final pin = pinController.text.trim();
               if (pin.length >= 4) {
@@ -45,33 +49,54 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
+  void _reSeedDemoPhotos(BuildContext context, WidgetRef ref) async {
+    final photoRepo = ref.read(photoRepositoryProvider);
+    final albumRepo = ref.read(albumRepositoryProvider);
+    await SampleDataSeeder.forceReSeed(photoRepo, albumRepo);
+    await ref.read(galleryControllerProvider.notifier).loadPhotos();
+
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('🎨 Schöne neue Demobilder wurden erfolgreich erstellt!')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsState = ref.watch(settingsControllerProvider);
     final settingsNotifier = ref.read(settingsControllerProvider.notifier);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.bgDark : AppColors.bgLight,
       appBar: AppBar(
-        title: const Text('Einstellungen ⚙️'),
+        title: const Text('Eltern-Bereich & Einstellungen ⚙️'),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 95),
         children: [
           // Kindermodus Section
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             child: SwitchListTile(
-              secondary: const Text('👧', style: TextStyle(fontSize: 28)),
+              secondary: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.yellowLight,
+                  shape: BoxShape.circle,
+                ),
+                child: const Text('👧', style: TextStyle(fontSize: 22)),
+              ),
               title: const Text(
                 'Kinder-Modus aktiv',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
               ),
               subtitle: const Text('Verhindert unabsichtliches Löschen und schützt Systemeinstellungen.'),
               value: settingsState.isKidMode,
               activeColor: AppColors.pinkPrimary,
               onChanged: (active) {
                 if (!active) {
-                  // Unlocking kid mode requires parental gate
                   ParentalGateDialog.show(
                     context,
                     onAuthenticated: () => settingsNotifier.setKidModeDirect(false),
@@ -86,12 +111,18 @@ class SettingsScreen extends ConsumerWidget {
 
           // Eltern-PIN Section
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             child: ListTile(
-              leading: const Text('🔐', style: TextStyle(fontSize: 28)),
-              title: const Text('Eltern-PIN ändern', style: TextStyle(fontWeight: FontWeight.bold)),
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: AppColors.pinkSoft,
+                  shape: BoxShape.circle,
+                ),
+                child: const Text('🔐', style: TextStyle(fontSize: 22)),
+              ),
+              title: const Text('Eltern-PIN ändern', style: TextStyle(fontWeight: FontWeight.w800)),
               subtitle: const Text('Schützt die Sicherheitsabfragen vor den Kleinen.'),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
                 ParentalGateDialog.show(
                   context,
@@ -102,14 +133,39 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
 
+          // Beautiful Demobilder neu laden Button
+          Card(
+            child: ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: AppColors.turquoiseSoft,
+                  shape: BoxShape.circle,
+                ),
+                child: const Text('🎨', style: TextStyle(fontSize: 22)),
+              ),
+              title: const Text('Schöne Demobilder laden', style: TextStyle(fontWeight: FontWeight.w800)),
+              subtitle: const Text('Aktualisiert die Beispielbilder mit hübschen Strand-, Tier- & Regenbogengrafiken.'),
+              trailing: const Icon(Icons.refresh_rounded, color: AppColors.turquoiseSecondary),
+              onTap: () => _reSeedDemoPhotos(context, ref),
+            ),
+          ),
+          const SizedBox(height: 12),
+
           // Cloud Sync (V2 Preview)
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             child: ListTile(
-              leading: const Text('☁️', style: TextStyle(fontSize: 28)),
-              title: const Text('Cloud-Synchronisation (Version 2)', style: TextStyle(fontWeight: FontWeight.bold)),
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: AppColors.purpleSoft,
+                  shape: BoxShape.circle,
+                ),
+                child: const Text('☁️', style: TextStyle(fontSize: 22)),
+              ),
+              title: const Text('Cloud-Synchronisation (V2)', style: TextStyle(fontWeight: FontWeight.w800)),
               subtitle: const Text('OneDrive, Google Drive, Dropbox, iCloud Backup-Status'),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () => context.push('/cloud'),
             ),
           ),
@@ -117,7 +173,6 @@ class SettingsScreen extends ConsumerWidget {
 
           // Slideshow Speed
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -125,16 +180,16 @@ class SettingsScreen extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      const Text('⏱️', style: TextStyle(fontSize: 28)),
+                      const Text('⏱️', style: TextStyle(fontSize: 24)),
                       const SizedBox(width: 12),
                       const Text(
                         'Diashow Geschwindigkeit',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
                       ),
                       const Spacer(),
                       Text(
-                        '${settingsState.slideshowSpeed} Sekunden',
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.purpleAccent),
+                        '${settingsState.slideshowSpeed}s',
+                        style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.purpleAccent),
                       ),
                     ],
                   ),
@@ -154,21 +209,27 @@ class SettingsScreen extends ConsumerWidget {
 
           // Retention Info
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-            child: const ListTile(
-              leading: Text('🗑️', style: TextStyle(fontSize: 28)),
-              title: Text('Papierkorb-Aufbewahrung', style: TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text('Gelöschte Fotos werden für 30 Tage aufbewahrt und können wiederhergestellt werden.'),
+            child: ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFFEBEE),
+                  shape: BoxShape.circle,
+                ),
+                child: const Text('🗑️', style: TextStyle(fontSize: 22)),
+              ),
+              title: const Text('Papierkorb-Aufbewahrung', style: TextStyle(fontWeight: FontWeight.w800)),
+              subtitle: const Text('Gelöschte Fotos werden für 30 Tage aufbewahrt und können wiederhergestellt werden.'),
             ),
           ),
           const SizedBox(height: 24),
 
           // App Info
-          Center(
+          const Center(
             child: Column(
-              children: const [
+              children: [
                 Text(
-                  'PhotoKids Studio v1.0.0',
+                  'PhotoKids Studio v1.1.0',
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
                 ),
                 SizedBox(height: 4),

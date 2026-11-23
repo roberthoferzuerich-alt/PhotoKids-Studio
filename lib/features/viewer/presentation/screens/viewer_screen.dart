@@ -76,7 +76,6 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
     }
 
     if (settings.isKidMode) {
-      // Protect with Parental Gate in Kid Mode
       ParentalGateDialog.show(
         context,
         onAuthenticated: () => _showDeleteDialog(executeDelete),
@@ -90,10 +89,11 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Foto löschen?'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        title: const Text('Foto löschen? 🗑️'),
         content: const Text(
-          'Möchtest du dieses Foto wirklich in den Papierkorb verschieben? '
-          'Dort bleibt es 30 Tage lang gespeichert und kann wiederhergestellt werden.',
+          'Möchtest du dieses Foto in den Papierkorb verschieben? '
+          'Dort bleibt es 30 Tage lang aufbewahrt und kann jederzeit wiederhergestellt werden.',
         ),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Abbrechen')),
@@ -127,21 +127,27 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
           children: [
             Row(
               children: [
-                const Icon(Icons.info_outline_rounded, color: AppColors.pinkPrimary, size: 28),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: const BoxDecoration(
+                    color: AppColors.pinkSoft,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.info_outline_rounded, color: AppColors.pinkPrimary, size: 24),
+                ),
                 const SizedBox(width: 12),
-                const Text('Bildinformationen (EXIF)', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const Text('Bildinformationen (EXIF)', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                 const Spacer(),
-                IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.of(ctx).pop()),
+                IconButton(icon: const Icon(Icons.close_rounded), onPressed: () => Navigator.of(ctx).pop()),
               ],
             ),
-            const Divider(),
+            const Divider(height: 24),
             _buildExifRow('📁 Dateiname', photo.fileName),
             _buildExifRow('📐 Auflösung', '${photo.width} × ${photo.height} Pixel'),
             _buildExifRow('💾 Dateigröße', '$sizeMb MB (${photo.fileSizeBytes} Bytes)'),
-            _buildExifRow('📅 Aufnahmedatum', dateFormat.format(photo.dateTaken)),
+            _buildExifRow('📅 Datum', dateFormat.format(photo.dateTaken)),
             _buildExifRow('🏷️ Format', photo.fileExtension.toUpperCase()),
-            _buildExifRow('📍 Speicherort', photo.filePath),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
           ],
         ),
       ),
@@ -154,8 +160,8 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 140, child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14))),
-          Expanded(child: Text(value, style: const TextStyle(color: Colors.black87, fontSize: 14))),
+          SizedBox(width: 120, child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13))),
+          Expanded(child: Text(value, style: const TextStyle(color: Colors.black87, fontSize: 13))),
         ],
       ),
     );
@@ -172,20 +178,21 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
     }
 
     final galleryNotifier = ref.read(galleryControllerProvider.notifier);
+    final cleanName = photo.fileName.replaceAll('.jpg', '').replaceAll('.png', '').replaceAll('_', ' ');
 
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: _isFullscreen
           ? null
           : AppBar(
-              backgroundColor: Colors.black.withOpacity(0.5),
+              backgroundColor: Colors.black.withValues(alpha: 0.6),
               foregroundColor: Colors.white,
-              title: Text(photo.fileName, style: const TextStyle(fontSize: 16, color: Colors.white)),
+              title: Text(cleanName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white)),
               actions: [
                 IconButton(
                   icon: Icon(
                     photo.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                    color: photo.isFavorite ? Colors.redAccent : Colors.white,
+                    color: photo.isFavorite ? AppColors.pinkPrimary : Colors.white,
                   ),
                   tooltip: 'Favorit',
                   onPressed: () => galleryNotifier.toggleFavorite(photo),
@@ -197,7 +204,7 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.info_outline_rounded),
-                  tooltip: 'EXIF Details',
+                  tooltip: 'Details',
                   onPressed: () => _showExifDetails(photo),
                 ),
                 IconButton(
@@ -234,31 +241,49 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
       bottomNavigationBar: _isFullscreen
           ? null
           : Container(
-              color: Colors.black.withOpacity(0.6),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.pinkPrimary,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              color: Colors.black.withValues(alpha: 0.6),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              child: SafeArea(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: AppColors.pinkGradient,
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.pinkPrimary.withValues(alpha: 0.4),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        ),
+                        icon: const Icon(Icons.edit_rounded, size: 20),
+                        label: const Text('Bearbeiten 🎨', style: TextStyle(fontWeight: FontWeight.w800)),
+                        onPressed: () => context.push('/editor', extra: photo),
+                      ),
                     ),
-                    icon: const Icon(Icons.edit_rounded),
-                    label: const Text('Bearbeiten 🎨', style: TextStyle(fontWeight: FontWeight.bold)),
-                    onPressed: () => context.push('/editor', extra: photo),
-                  ),
-                  OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.white70),
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white70),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      ),
+                      icon: const Icon(Icons.slideshow_rounded, size: 20),
+                      label: const Text('Diashow', style: TextStyle(fontWeight: FontWeight.w700)),
+                      onPressed: () => context.push('/slideshow'),
                     ),
-                    icon: const Icon(Icons.slideshow_rounded),
-                    label: const Text('Diashow'),
-                    onPressed: () => context.push('/slideshow'),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
     );

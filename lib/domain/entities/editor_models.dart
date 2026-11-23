@@ -73,7 +73,7 @@ class DrawingStroke {
       p.blendMode = BlendMode.clear;
       p.color = Colors.transparent;
     } else {
-      p.color = color.withOpacity(opacity);
+      p.color = color.withValues(alpha: opacity);
       p.style = PaintingStyle.stroke;
     }
     return p;

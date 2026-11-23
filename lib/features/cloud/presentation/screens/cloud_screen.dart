@@ -29,9 +29,9 @@ class _CloudScreenState extends State<CloudScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.turquoiseLight.withOpacity(0.2),
+              color: AppColors.turquoiseLight.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppColors.turquoiseSecondary.withOpacity(0.4)),
+              border: Border.all(color: AppColors.turquoiseSecondary.withValues(alpha: 0.4)),
             ),
             child: Row(
               children: const [

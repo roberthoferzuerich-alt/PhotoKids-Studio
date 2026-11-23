@@ -367,7 +367,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         margin: const EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
-          color: isActive ? AppColors.pinkPrimary.withOpacity(0.3) : Colors.transparent,
+          color: isActive ? AppColors.pinkPrimary.withValues(alpha: 0.3) : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
           border: isActive ? Border.all(color: AppColors.pinkPrimary) : null,
         ),
