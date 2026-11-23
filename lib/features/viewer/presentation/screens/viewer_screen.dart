@@ -62,11 +62,7 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
         await galleryNotifier.moveToTrash(photo.id);
       }
       if (mounted) {
-        if (context.canPop()) {
-          context.pop();
-        } else {
-          context.go('/');
-        }
+        context.pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -245,59 +241,73 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
       bottomNavigationBar: _isFullscreen
           ? null
           : Container(
-              color: Colors.black.withValues(alpha: 0.6),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              color: Colors.black.withValues(alpha: 0.8),
               child: SafeArea(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: AppColors.pinkGradient,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.pinkPrimary.withValues(alpha: 0.4),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
+                top: false,
+                child: Container(
+                  height: 64,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Bearbeiten Button
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: AppColors.pinkGradient,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.pinkPrimary.withValues(alpha: 0.4),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                            ),
+                            icon: const Icon(Icons.edit_rounded, size: 18),
+                            label: const Text('Bearbeiten 🎨', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+                            onPressed: () => context.push('/editor', extra: photo),
+                          ),
                         ),
-                        icon: const Icon(Icons.edit_rounded, size: 20),
-                        label: const Text('Bearbeiten 🎨', style: TextStyle(fontWeight: FontWeight.w800)),
-                        onPressed: () => context.push('/editor', extra: photo),
-                      ),
+                        const SizedBox(width: 8),
+
+                        // Web-Größe Button
+                        OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.turquoiseLight,
+                            side: const BorderSide(color: AppColors.turquoiseSecondary),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          ),
+                          icon: const Icon(Icons.public_rounded, size: 18),
+                          label: const Text('Web-Größe 🌐', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                          onPressed: () => context.push('/editor', extra: photo),
+                        ),
+                        const SizedBox(width: 8),
+
+                        // Diashow Button
+                        OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.white70),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          ),
+                          icon: const Icon(Icons.slideshow_rounded, size: 18),
+                          label: const Text('Diashow 🎬', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                          onPressed: () => context.push('/slideshow'),
+                        ),
+                      ],
                     ),
-                    OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.turquoiseLight,
-                        side: const BorderSide(color: AppColors.turquoiseSecondary),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      ),
-                      icon: const Icon(Icons.public_rounded, size: 20),
-                      label: const Text('Web-Größe 🌐', style: TextStyle(fontWeight: FontWeight.w700)),
-                      onPressed: () => context.push('/editor', extra: photo),
-                    ),
-                    OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white70),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      ),
-                      icon: const Icon(Icons.slideshow_rounded, size: 20),
-                      label: const Text('Diashow', style: TextStyle(fontWeight: FontWeight.w700)),
-                      onPressed: () => context.push('/slideshow'),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),

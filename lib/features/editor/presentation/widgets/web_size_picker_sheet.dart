@@ -270,15 +270,15 @@ class _WebSizePickerSheetState extends State<WebSizePickerSheet> {
                             labelText: 'Breite (px)',
                             filled: true,
                             fillColor: isDark ? const Color(0xFF2B2338) : Colors.white,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
                           ),
                           onChanged: _onWidthChanged,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      // Lock Aspect Ratio Button
                       IconButton(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        constraints: const BoxConstraints(),
                         icon: Icon(
                           _maintainAspectRatio ? Icons.link_rounded : Icons.link_off_rounded,
                           color: _maintainAspectRatio ? AppColors.turquoiseSecondary : Colors.grey,
@@ -293,7 +293,6 @@ class _WebSizePickerSheetState extends State<WebSizePickerSheet> {
                           });
                         },
                       ),
-                      const SizedBox(width: 8),
                       // Height input
                       Expanded(
                         child: TextField(
@@ -303,20 +302,20 @@ class _WebSizePickerSheetState extends State<WebSizePickerSheet> {
                             labelText: 'Höhe (px)',
                             filled: true,
                             fillColor: isDark ? const Color(0xFF2B2338) : Colors.white,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
                           ),
                           onChanged: _onHeightChanged,
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 8),
                       // Apply Button
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.turquoiseSecondary,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                         ),
                         onPressed: () {
                           final w = int.tryParse(_customWidthController.text) ?? 1200;
@@ -324,7 +323,7 @@ class _WebSizePickerSheetState extends State<WebSizePickerSheet> {
                           widget.onCustomSizeSelected(w, h);
                           Navigator.of(context).pop();
                         },
-                        child: const Text('Anwenden', style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: const Text('OK', style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
