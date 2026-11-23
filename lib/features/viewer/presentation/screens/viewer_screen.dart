@@ -62,7 +62,11 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
         await galleryNotifier.moveToTrash(photo.id);
       }
       if (mounted) {
-        context.pop();
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/');
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(

@@ -43,47 +43,55 @@ class MainNavigationShell extends StatelessWidget {
     final selectedIndex = _calculateSelectedIndex(context);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final navBgColor = isDark ? const Color(0xFF201A2C) : Colors.white;
 
     return Scaffold(
       body: child,
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
-              blurRadius: 16,
-              offset: const Offset(0, -4),
+        color: navBgColor,
+        child: SafeArea(
+          top: false,
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
+                  blurRadius: 16,
+                  offset: const Offset(0, -4),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          child: NavigationBar(
-            selectedIndex: selectedIndex,
-            onDestinationSelected: (idx) => _onItemTapped(idx, context),
-            height: 68,
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.photo_library_outlined),
-                selectedIcon: Icon(Icons.photo_library_rounded, color: AppColors.pinkPrimary),
-                label: 'Galerie 🖼️',
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              child: NavigationBar(
+                selectedIndex: selectedIndex,
+                onDestinationSelected: (idx) => _onItemTapped(idx, context),
+                height: 68,
+                backgroundColor: navBgColor,
+                destinations: const [
+                  NavigationDestination(
+                    icon: Icon(Icons.photo_library_outlined),
+                    selectedIcon: Icon(Icons.photo_library_rounded, color: AppColors.pinkPrimary),
+                    label: 'Galerie 🖼️',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.folder_open_rounded),
+                    selectedIcon: Icon(Icons.folder_rounded, color: AppColors.turquoiseSecondary),
+                    label: 'Alben 📚',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.slideshow_outlined),
+                    selectedIcon: Icon(Icons.slideshow_rounded, color: AppColors.purpleAccent),
+                    label: 'Diashow 🎬',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.family_restroom_outlined),
+                    selectedIcon: Icon(Icons.family_restroom_rounded, color: AppColors.yellowDark),
+                    label: 'Eltern ⚙️',
+                  ),
+                ],
               ),
-              NavigationDestination(
-                icon: Icon(Icons.folder_open_rounded),
-                selectedIcon: Icon(Icons.folder_rounded, color: AppColors.turquoiseSecondary),
-                label: 'Alben 📚',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.slideshow_outlined),
-                selectedIcon: Icon(Icons.slideshow_rounded, color: AppColors.purpleAccent),
-                label: 'Diashow 🎬',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.family_restroom_outlined),
-                selectedIcon: Icon(Icons.family_restroom_rounded, color: AppColors.yellowDark),
-                label: 'Eltern ⚙️',
-              ),
-            ],
+            ),
           ),
         ),
       ),

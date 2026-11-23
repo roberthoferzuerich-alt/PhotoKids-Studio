@@ -31,7 +31,11 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('🎉 Foto erfolgreich gespeichert!')),
       );
-      context.pop();
+      if (context.canPop()) {
+        context.pop();
+      } else {
+        context.go('/');
+      }
     }
   }
 
@@ -53,213 +57,229 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: const Text('Studio Editor 🎨', style: TextStyle(fontWeight: FontWeight.bold)),
+        titleSpacing: 0,
+        title: const Text(
+          'Studio Editor 🎨',
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.close_rounded),
-          onPressed: () => context.pop(),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/');
+            }
+          },
         ),
         actions: [
           // Undo & Redo
           IconButton(
-            icon: const Icon(Icons.undo_rounded),
+            icon: const Icon(Icons.undo_rounded, size: 22),
+            tooltip: 'Rückgängig',
             onPressed: editorState.strokes.isNotEmpty ? () => editorNotifier.undoStroke() : null,
           ),
           IconButton(
-            icon: const Icon(Icons.redo_rounded),
+            icon: const Icon(Icons.redo_rounded, size: 22),
+            tooltip: 'Wiederholen',
             onPressed: editorState.undoneStrokes.isNotEmpty ? () => editorNotifier.redoStroke() : null,
           ),
           // Save Button
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.pinkPrimary,
                 foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               ),
               icon: editorState.isSaving
                   ? const SizedBox(
-                      width: 18,
-                      height: 18,
+                      width: 16,
+                      height: 16,
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                     )
-                  : const Icon(Icons.check_rounded),
-              label: const Text('Speichern', style: TextStyle(fontWeight: FontWeight.bold)),
+                  : const Icon(Icons.check_rounded, size: 18),
+              label: const Text('Speichern', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
               onPressed: editorState.isSaving ? null : _savePhoto,
             ),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Canvas Area
-          Expanded(
-            child: Center(
-              child: RotatedBox(
-                quarterTurns: (editorState.rotationDegrees / 90).round() % 4,
-                child: Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.identity()
-                    ..scale(
-                      editorState.flipHorizontal ? -1.0 : 1.0,
-                      editorState.flipVertical ? -1.0 : 1.0,
-                    ),
-                  child: AspectRatio(
-                    aspectRatio: editorState.cropRatio.numericRatio ??
-                        (photo.width > 0 && photo.height > 0 ? photo.width / photo.height : 1.0),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        // Base Photo
-                        _buildEditorImage(photo, editorState),
+      body: Center(
+        child: RotatedBox(
+          quarterTurns: (editorState.rotationDegrees / 90).round() % 4,
+          child: Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.identity()
+              ..scale(
+                editorState.flipHorizontal ? -1.0 : 1.0,
+                editorState.flipVertical ? -1.0 : 1.0,
+              ),
+            child: AspectRatio(
+              aspectRatio: editorState.cropRatio.numericRatio ??
+                  (photo.width > 0 && photo.height > 0 ? photo.width / photo.height : 1.0),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Base Photo
+                  _buildEditorImage(photo, editorState),
 
-                        // Drawing Layer (Painter)
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onPanStart: (details) {
-                            if (editorState.activeTool == EditorActiveTool.draw) {
-                              setState(() {
-                                _currentPoints = [details.localPosition];
-                              });
-                            }
-                          },
-                          onPanUpdate: (details) {
-                            if (editorState.activeTool == EditorActiveTool.draw) {
-                              setState(() {
-                                _currentPoints.add(details.localPosition);
-                              });
-                            }
-                          },
-                          onPanEnd: (details) {
-                            if (editorState.activeTool == EditorActiveTool.draw && _currentPoints.isNotEmpty) {
-                              editorNotifier.addStroke(
-                                DrawingStroke(
-                                  points: List.from(_currentPoints),
-                                  color: editorState.currentDrawColor,
-                                  strokeWidth: editorState.currentBrushSize,
-                                  toolType: editorState.currentToolType,
+                  // Drawing Layer (Painter)
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onPanStart: (details) {
+                      if (editorState.activeTool == EditorActiveTool.draw) {
+                        setState(() {
+                          _currentPoints = [details.localPosition];
+                        });
+                      }
+                    },
+                    onPanUpdate: (details) {
+                      if (editorState.activeTool == EditorActiveTool.draw) {
+                        setState(() {
+                          _currentPoints.add(details.localPosition);
+                        });
+                      }
+                    },
+                    onPanEnd: (details) {
+                      if (editorState.activeTool == EditorActiveTool.draw && _currentPoints.isNotEmpty) {
+                        editorNotifier.addStroke(
+                          DrawingStroke(
+                            points: List.from(_currentPoints),
+                            color: editorState.currentDrawColor,
+                            strokeWidth: editorState.currentBrushSize,
+                            toolType: editorState.currentToolType,
+                          ),
+                        );
+                        setState(() {
+                          _currentPoints = [];
+                        });
+                      }
+                    },
+                    child: CustomPaint(
+                      painter: _EditorDrawingPainter(
+                        strokes: editorState.strokes,
+                        currentStrokePoints: _currentPoints,
+                        currentColor: editorState.currentDrawColor,
+                        currentWidth: editorState.currentBrushSize,
+                        currentType: editorState.currentToolType,
+                      ),
+                    ),
+                  ),
+
+                  // Interactive Text Overlays
+                  ...editorState.textOverlays.map((item) {
+                    return Positioned(
+                      left: item.position.dx,
+                      top: item.position.dy,
+                      child: GestureDetector(
+                        onPanUpdate: (details) {
+                          setState(() {
+                            item.position += details.delta;
+                          });
+                        },
+                        child: Transform.rotate(
+                          angle: item.rotation,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.black26,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.white38),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  item.text,
+                                  style: TextStyle(
+                                    color: item.color,
+                                    fontSize: item.fontSize,
+                                    fontWeight: FontWeight.bold,
+                                    shadows: item.hasShadow
+                                        ? const [Shadow(blurRadius: 4, color: Colors.black)]
+                                        : null,
+                                  ),
                                 ),
-                              );
-                              setState(() {
-                                _currentPoints = [];
-                              });
-                            }
-                          },
-                          child: CustomPaint(
-                            painter: _EditorDrawingPainter(
-                              strokes: editorState.strokes,
-                              currentStrokePoints: _currentPoints,
-                              currentColor: editorState.currentDrawColor,
-                              currentWidth: editorState.currentBrushSize,
-                              currentType: editorState.currentToolType,
+                                const SizedBox(width: 6),
+                                GestureDetector(
+                                  onTap: () => editorNotifier.removeTextOverlay(item.id),
+                                  child: const Icon(Icons.cancel, color: Colors.white70, size: 18),
+                                ),
+                              ],
                             ),
                           ),
                         ),
+                      ),
+                    );
+                  }),
 
-                        // Interactive Text Overlays
-                        ...editorState.textOverlays.map((item) {
-                          return Positioned(
-                            left: item.position.dx,
-                            top: item.position.dy,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                setState(() {
-                                  item.position += details.delta;
-                                });
-                              },
-                              child: Transform.rotate(
-                                angle: item.rotation,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black26,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(color: Colors.white38),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        item.text,
-                                        style: TextStyle(
-                                          color: item.color,
-                                          fontSize: item.fontSize,
-                                          fontWeight: FontWeight.bold,
-                                          shadows: item.hasShadow
-                                              ? const [Shadow(blurRadius: 4, color: Colors.black)]
-                                              : null,
-                                        ),
+                  // Interactive Stickers (Scale, Rotate, Drag)
+                  ...editorState.stickers.map((sticker) {
+                    return Positioned(
+                      left: sticker.position.dx,
+                      top: sticker.position.dy,
+                      child: GestureDetector(
+                        onPanUpdate: (details) {
+                          setState(() {
+                            sticker.position += details.delta;
+                          });
+                        },
+                        child: Transform.rotate(
+                          angle: sticker.rotation,
+                          child: Transform.scale(
+                            scale: sticker.scale,
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Text(
+                                  sticker.emojiOrAsset,
+                                  style: const TextStyle(fontSize: 48),
+                                ),
+                                Positioned(
+                                  right: -10,
+                                  top: -10,
+                                  child: GestureDetector(
+                                    onTap: () => editorNotifier.removeSticker(sticker.id),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.redAccent,
+                                        shape: BoxShape.circle,
                                       ),
-                                      const SizedBox(width: 6),
-                                      GestureDetector(
-                                        onTap: () => editorNotifier.removeTextOverlay(item.id),
-                                        child: const Icon(Icons.cancel, color: Colors.white70, size: 18),
-                                      ),
-                                    ],
+                                      child: const Icon(Icons.close, color: Colors.white, size: 16),
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          );
-                        }),
-
-                        // Interactive Stickers (Scale, Rotate, Drag)
-                        ...editorState.stickers.map((sticker) {
-                          return Positioned(
-                            left: sticker.position.dx,
-                            top: sticker.position.dy,
-                            child: GestureDetector(
-                              onPanUpdate: (details) {
-                                setState(() {
-                                  sticker.position += details.delta;
-                                });
-                              },
-                              child: Transform.rotate(
-                                angle: sticker.rotation,
-                                child: Transform.scale(
-                                  scale: sticker.scale,
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      Text(
-                                        sticker.emojiOrAsset,
-                                        style: const TextStyle(fontSize: 48),
-                                      ),
-                                      Positioned(
-                                        right: -10,
-                                        top: -10,
-                                        child: GestureDetector(
-                                          onTap: () => editorNotifier.removeSticker(sticker.id),
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              color: Colors.redAccent,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: const Icon(Icons.close, color: Colors.white, size: 16),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
-                  ),
-                ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ],
               ),
             ),
           ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        color: const Color(0xFF1E1C24),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Sub-Toolbar panel for the active tool
+              _buildActiveToolPanel(editorState, editorNotifier),
 
-          // Sub-Toolbar panel for the active tool
-          _buildActiveToolPanel(editorState, editorNotifier),
-
-          // Bottom Primary Toolbar
-          _buildPrimaryToolbar(editorState, editorNotifier),
-        ],
+              // Bottom Primary Toolbar
+              _buildPrimaryToolbar(editorState, editorNotifier),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -279,7 +299,6 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
   }
 
   ColorFilter _buildColorFilter(ColorAdjustmentParams params) {
-    // 5x4 matrix for contrast and brightness
     final b = params.brightness * 255;
     final c = params.contrast;
     final matrix = <double>[
@@ -293,7 +312,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
 
   Widget _buildPrimaryToolbar(EditorState state, EditorNotifier notifier) {
     return Container(
-      color: const Color(0xFF1F1D24),
+      color: const Color(0xFF1E1C24),
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -436,7 +455,6 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Tools: Pen, Marker, Brush, Eraser
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -467,7 +485,6 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           ],
         ),
         const SizedBox(height: 8),
-        // Color Picker Row
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -492,7 +509,6 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
             }).toList(),
           ),
         ),
-        // Brush Size Slider
         Row(
           children: [
             const Icon(Icons.circle, color: Colors.white70, size: 8),

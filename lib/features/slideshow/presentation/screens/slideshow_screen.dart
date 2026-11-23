@@ -96,69 +96,84 @@ class _SlideshowScreenState extends ConsumerState<SlideshowScreen> {
             top: 40,
             left: 20,
             right: 20,
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.close_rounded, color: Colors.white, size: 30),
-                  onPressed: () => context.pop(),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    currentPhoto.fileName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      shadows: [Shadow(blurRadius: 4, color: Colors.black)],
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+            child: SafeArea(
+              bottom: false,
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.close_rounded, color: Colors.white, size: 30),
+                    onPressed: () {
+                      if (context.canPop()) {
+                        context.pop();
+                      } else {
+                        context.go('/');
+                      }
+                    },
                   ),
-                ),
-                Text(
-                  '${_currentIndex + 1} / ${photos.length}',
-                  style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      currentPhoto.fileName.replaceAll('.jpg', '').replaceAll('.png', '').replaceAll('_', ' '),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        shadows: [Shadow(blurRadius: 4, color: Colors.black)],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Text(
+                    '${_currentIndex + 1} / ${photos.length}',
+                    style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ),
           ),
 
-          // Bottom Control Bar
+          // Bottom Control Bar with SafeArea
           Positioned(
-            bottom: 30,
-            left: 40,
-            right: 40,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.skip_previous_rounded, color: Colors.white, size: 32),
-                    onPressed: _prevSlide,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(40, 0, 40, 20),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      _isPlaying ? Icons.pause_circle_filled_rounded : Icons.play_circle_filled_rounded,
-                      color: AppColors.pinkPrimary,
-                      size: 48,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPlaying = !_isPlaying;
-                      });
-                    },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.skip_previous_rounded, color: Colors.white, size: 32),
+                        onPressed: _prevSlide,
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          _isPlaying ? Icons.pause_circle_filled_rounded : Icons.play_circle_filled_rounded,
+                          color: AppColors.pinkPrimary,
+                          size: 48,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPlaying = !_isPlaying;
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.skip_next_rounded, color: Colors.white, size: 32),
+                        onPressed: _nextSlide,
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.skip_next_rounded, color: Colors.white, size: 32),
-                    onPressed: _nextSlide,
-                  ),
-                ],
+                ),
               ),
             ),
           ),
