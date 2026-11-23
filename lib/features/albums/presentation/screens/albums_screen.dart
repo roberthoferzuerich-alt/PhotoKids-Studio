@@ -118,7 +118,7 @@ class AlbumsScreen extends ConsumerWidget {
                     crossAxisCount: 2,
                     crossAxisSpacing: 14,
                     mainAxisSpacing: 14,
-                    childAspectRatio: 0.95,
+                    childAspectRatio: 0.82,
                   ),
                   itemCount: albumsState.albums.length,
                   itemBuilder: (context, index) {
@@ -172,13 +172,13 @@ class AlbumsScreen extends ConsumerWidget {
             context.go('/');
           },
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 76,
-                  height: 76,
+                  width: 68,
+                  height: 68,
                   decoration: BoxDecoration(
                     color: AppColors.turquoiseSoft,
                     shape: BoxShape.circle,
@@ -191,30 +191,30 @@ class AlbumsScreen extends ConsumerWidget {
                     ],
                   ),
                   child: Center(
-                    child: Text(album.iconEmoji, style: const TextStyle(fontSize: 40)),
+                    child: Text(album.iconEmoji, style: const TextStyle(fontSize: 36)),
                   ),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 10),
                 Text(
                   album.name,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                   decoration: BoxDecoration(
-                    color: AppColors.turquoiseSecondary.withValues(alpha: 0.12),
+                    color: AppColors.turquoiseSecondary.withValues(alpha: isDark ? 0.25 : 0.12),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '${album.photoCount} Fotos',
-                    style: const TextStyle(
-                      color: AppColors.turquoiseDark,
+                    style: TextStyle(
+                      color: isDark ? AppColors.turquoiseLight : AppColors.turquoiseDark,
                       fontWeight: FontWeight.w700,
-                      fontSize: 12,
+                      fontSize: 11,
                     ),
                   ),
                 ),
