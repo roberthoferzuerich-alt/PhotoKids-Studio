@@ -18,14 +18,30 @@ class DatabaseService {
 
   static Future<Database> _initDatabase() async {
     if (kIsWeb) {
-      databaseFactory = databaseFactoryFfiWeb;
-      return await databaseFactory.openDatabase(
-        _dbName,
-        options: OpenDatabaseOptions(
-          version: _dbVersion,
-          onCreate: _onCreate,
-        ),
-      );
+      try {
+        databaseFactory = databaseFactoryFfiWebNoWebWorker;
+        return await databaseFactory.openDatabase(
+          _dbName,
+          options: OpenDatabaseOptions(
+            version: _dbVersion,
+            onCreate: _onCreate,
+          ),
+        );
+      } catch (e) {
+        debugPrint('Web database error with $_dbName: $e. Falling back to inMemoryDatabasePath.');
+        try {
+          return await databaseFactory.openDatabase(
+            inMemoryDatabasePath,
+            options: OpenDatabaseOptions(
+              version: _dbVersion,
+              onCreate: _onCreate,
+            ),
+          );
+        } catch (e2) {
+          debugPrint('Web database inMemory fallback failed: $e2');
+          rethrow;
+        }
+      }
     } else {
       if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
         sqfliteFfiInit();
