@@ -187,7 +187,13 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
           : AppBar(
               backgroundColor: Colors.black.withValues(alpha: 0.6),
               foregroundColor: Colors.white,
-              title: Text(cleanName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white)),
+              titleSpacing: 0,
+              title: Text(
+                cleanName,
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
               actions: [
                 IconButton(
                   icon: Icon(
@@ -198,25 +204,58 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
                   onPressed: () => galleryNotifier.toggleFavorite(photo),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.rotate_right_rounded),
-                  tooltip: 'Drehen',
-                  onPressed: () => setState(() => _rotationQuarterTurns = (_rotationQuarterTurns + 1) % 4),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.info_outline_rounded),
-                  tooltip: 'Details',
-                  onPressed: () => _showExifDetails(photo),
-                ),
-                IconButton(
                   icon: const Icon(Icons.share_rounded),
                   tooltip: 'Teilen',
                   onPressed: () => _sharePhoto(photo),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
-                  tooltip: 'Löschen',
-                  onPressed: () => _confirmDelete(photo),
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
+                  tooltip: 'Mehr Optionen',
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                  itemBuilder: (ctx) => [
+                    const PopupMenuItem(
+                      value: 'rotate',
+                      child: Row(
+                        children: [
+                          Icon(Icons.rotate_right_rounded, size: 20),
+                          SizedBox(width: 10),
+                          Text('Um 90° drehen'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'info',
+                      child: Row(
+                        children: [
+                          Icon(Icons.info_outline_rounded, size: 20),
+                          SizedBox(width: 10),
+                          Text('Bilddetails (EXIF)'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuDivider(),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_outline_rounded, color: Colors.redAccent, size: 20),
+                          SizedBox(width: 10),
+                          Text('Löschen', style: TextStyle(color: Colors.redAccent)),
+                        ],
+                      ),
+                    ),
+                  ],
+                  onSelected: (val) {
+                    if (val == 'rotate') {
+                      setState(() => _rotationQuarterTurns = (_rotationQuarterTurns + 1) % 4);
+                    } else if (val == 'info') {
+                      _showExifDetails(photo);
+                    } else if (val == 'delete') {
+                      _confirmDelete(photo);
+                    }
+                  },
                 ),
+                const SizedBox(width: 4),
               ],
             ),
       body: GestureDetector(
@@ -241,27 +280,25 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
       bottomNavigationBar: _isFullscreen
           ? null
           : Container(
-              color: Colors.black.withValues(alpha: 0.8),
+              color: Colors.black.withValues(alpha: 0.85),
               child: SafeArea(
                 top: false,
-                child: Container(
-                  height: 64,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Bearbeiten Button
-                        Container(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  child: Row(
+                    children: [
+                      // 1. Bearbeiten Button (Flexible)
+                      Expanded(
+                        child: Container(
+                          height: 48,
                           decoration: BoxDecoration(
                             gradient: AppColors.pinkGradient,
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.pinkPrimary.withValues(alpha: 0.4),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
+                                color: AppColors.pinkPrimary.withValues(alpha: 0.35),
+                                blurRadius: 8,
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
@@ -270,43 +307,62 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
                               backgroundColor: Colors.transparent,
                               shadowColor: Colors.transparent,
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
                             ),
                             icon: const Icon(Icons.edit_rounded, size: 18),
-                            label: const Text('Bearbeiten 🎨', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+                            label: const Text(
+                              'Bearbeiten 🎨',
+                              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                             onPressed: () => context.push('/editor', extra: photo),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                      ),
+                      const SizedBox(width: 8),
 
-                        // Web-Größe Button
-                        OutlinedButton.icon(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.turquoiseLight,
-                            side: const BorderSide(color: AppColors.turquoiseSecondary),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      // 2. Web-Größe Button (Flexible)
+                      Expanded(
+                        child: SizedBox(
+                          height: 48,
+                          child: OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColors.turquoiseLight,
+                              side: const BorderSide(color: AppColors.turquoiseSecondary, width: 1.5),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                            ),
+                            icon: const Icon(Icons.public_rounded, size: 18),
+                            label: const Text(
+                              'Web-Größe 🌐',
+                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            onPressed: () => context.push('/editor', extra: photo),
                           ),
-                          icon: const Icon(Icons.public_rounded, size: 18),
-                          label: const Text('Web-Größe 🌐', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
-                          onPressed: () => context.push('/editor', extra: photo),
                         ),
-                        const SizedBox(width: 8),
+                      ),
+                      const SizedBox(width: 8),
 
-                        // Diashow Button
-                        OutlinedButton.icon(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.white70),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                          ),
-                          icon: const Icon(Icons.slideshow_rounded, size: 18),
-                          label: const Text('Diashow 🎬', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                      // 3. Diashow Button (Kreisrundes Icon)
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white24),
+                        ),
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: const Icon(Icons.slideshow_rounded, color: Colors.white, size: 24),
+                          tooltip: 'Diashow starten',
                           onPressed: () => context.push('/slideshow'),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
