@@ -183,15 +183,17 @@ class _SlideshowScreenState extends ConsumerState<SlideshowScreen> {
   }
 
   Widget _buildSlideshowImage(PhotoEntity photo) {
-    final file = File(photo.filePath);
-    if (!kIsWeb && file.existsSync()) {
-      return Image.file(
-        file,
-        key: ValueKey<String>(photo.id),
-        fit: BoxFit.contain,
-        width: double.infinity,
-        height: double.infinity,
-      );
+    if (!kIsWeb) {
+      final file = File(photo.filePath);
+      if (file.existsSync()) {
+        return Image.file(
+          file,
+          key: ValueKey<String>(photo.id),
+          fit: BoxFit.contain,
+          width: double.infinity,
+          height: double.infinity,
+        );
+      }
     }
     return Container(
       key: ValueKey<String>(photo.id),

@@ -661,13 +661,15 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
   }
 
   Widget _buildPhotoThumbnail(PhotoEntity photo) {
-    final file = File(photo.filePath);
-    if (!kIsWeb && file.existsSync()) {
-      return Image.file(
-        file,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
-      );
+    if (!kIsWeb) {
+      final file = File(photo.filePath);
+      if (file.existsSync()) {
+        return Image.file(
+          file,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+        );
+      }
     }
     return _buildPlaceholder();
   }

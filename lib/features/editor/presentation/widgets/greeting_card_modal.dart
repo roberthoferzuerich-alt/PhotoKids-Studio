@@ -374,9 +374,11 @@ class _GreetingCardModalState extends State<GreetingCardModal> {
   }
 
   Widget _buildPhotoThumbnail(PhotoEntity photo) {
-    final file = File(photo.filePath);
-    if (!kIsWeb && file.existsSync()) {
-      return Image.file(file, fit: BoxFit.cover);
+    if (!kIsWeb) {
+      final file = File(photo.filePath);
+      if (file.existsSync()) {
+        return Image.file(file, fit: BoxFit.cover);
+      }
     }
     return Container(
       color: Colors.grey[300],

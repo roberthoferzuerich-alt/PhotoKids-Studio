@@ -37,6 +37,7 @@ dependencies:
   intl: ^0.20.2
   crypto: ^3.0.6
   share_plus: ^10.1.4
+  sqflite_common_ffi_web: ^1.2.2
 
 dev_dependencies:
   flutter_test:

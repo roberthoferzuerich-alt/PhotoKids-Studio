@@ -471,9 +471,11 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
   }
 
   Widget _buildRawImage(PhotoEntity photo) {
-    final file = File(photo.filePath);
-    if (!kIsWeb && file.existsSync()) {
-      return Image.file(file, fit: BoxFit.contain);
+    if (!kIsWeb) {
+      final file = File(photo.filePath);
+      if (file.existsSync()) {
+        return Image.file(file, fit: BoxFit.contain);
+      }
     }
     return Container(
       color: Colors.grey[900],
@@ -482,30 +484,32 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
   }
 
   Widget _buildEditorImage(PhotoEntity photo, EditorState state) {
-    final file = File(photo.filePath);
-    if (!kIsWeb && file.existsSync()) {
-      Widget imageWidget = Image.file(file, fit: BoxFit.contain);
+    if (!kIsWeb) {
+      final file = File(photo.filePath);
+      if (file.existsSync()) {
+        Widget imageWidget = Image.file(file, fit: BoxFit.contain);
 
-      // Malbuch-Modus (Coloring outline) preview
-      if (state.activeFilterPreset == 'coloring' || state.activeFilterPreset == 'Malbuch 🖍️') {
-        // High contrast edge outline simulation in preview
-        imageWidget = ColorFiltered(
-          colorFilter: const ColorFilter.matrix(<double>[
-            -2.0, -2.0, -2.0, 0, 255,
-            -2.0, -2.0, -2.0, 0, 255,
-            -2.0, -2.0, -2.0, 0, 255,
-            0, 0, 0, 1, 0,
-          ]),
-          child: imageWidget,
-        );
-      } else {
-        imageWidget = ColorFiltered(
-          colorFilter: _buildColorFilter(state.colorAdjustments),
-          child: imageWidget,
-        );
+        // Malbuch-Modus (Coloring outline) preview
+        if (state.activeFilterPreset == 'coloring' || state.activeFilterPreset == 'Malbuch 🖍️') {
+          // High contrast edge outline simulation in preview
+          imageWidget = ColorFiltered(
+            colorFilter: const ColorFilter.matrix(<double>[
+              -2.0, -2.0, -2.0, 0, 255,
+              -2.0, -2.0, -2.0, 0, 255,
+              -2.0, -2.0, -2.0, 0, 255,
+              0, 0, 0, 1, 0,
+            ]),
+            child: imageWidget,
+          );
+        } else {
+          imageWidget = ColorFiltered(
+            colorFilter: _buildColorFilter(state.colorAdjustments),
+            child: imageWidget,
+          );
+        }
+
+        return imageWidget;
       }
-
-      return imageWidget;
     }
     return Container(
       color: Colors.grey[850],

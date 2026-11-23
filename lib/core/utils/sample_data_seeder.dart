@@ -15,8 +15,34 @@ class SampleDataSeeder {
     IPhotoRepository photoRepo,
     IAlbumRepository albumRepo,
   ) async {
+    if (kIsWeb) {
+      try {
+        final albums = await albumRepo.getAllAlbums();
+        if (albums.isEmpty) {
+          final albumUrlaub = AlbumEntity(
+            id: 'album_urlaub',
+            name: 'Sommerurlaub 🏖️',
+            description: 'Strand, Meer und Sonnentage',
+            createdAt: DateTime.now().subtract(const Duration(days: 10)),
+            iconEmoji: '🏖️',
+          );
+          final albumTiere = AlbumEntity(
+            id: 'album_tiere',
+            name: 'Tiere & Natur 🐶',
+            description: 'Süße Tiere im Zoo und Park',
+            createdAt: DateTime.now().subtract(const Duration(days: 5)),
+            iconEmoji: '🐶',
+          );
+          await albumRepo.createAlbum(albumUrlaub);
+          await albumRepo.createAlbum(albumTiere);
+        }
+      } catch (e) {
+        debugPrint('Web album seeding notice: $e');
+      }
+      return;
+    }
     final count = await photoRepo.getTotalPhotoCount();
-    if (count > 0 || kIsWeb) return;
+    if (count > 0) return;
     await forceReSeed(photoRepo, albumRepo);
   }
 

@@ -384,13 +384,15 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
   }
 
   Widget _buildMainImage(PhotoEntity photo) {
-    final file = File(photo.filePath);
-    if (!kIsWeb && file.existsSync()) {
-      return Image.file(
-        file,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
-      );
+    if (!kIsWeb) {
+      final file = File(photo.filePath);
+      if (file.existsSync()) {
+        return Image.file(
+          file,
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+        );
+      }
     }
     return _buildPlaceholder();
   }

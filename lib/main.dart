@@ -12,16 +12,17 @@ import 'package:denis_phote_world/features/settings/presentation/controllers/set
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Create a container for initial seeding
   final container = ProviderContainer();
-  final photoRepo = container.read(photoRepositoryProvider);
-  final albumRepo = container.read(albumRepositoryProvider);
 
-  // Seed sample images and albums on first run for seamless exploration
-  await SampleDataSeeder.seedInitialDataIfNeeded(photoRepo, albumRepo);
+  try {
+    final photoRepo = container.read(photoRepositoryProvider);
+    final albumRepo = container.read(albumRepositoryProvider);
 
-  // Initial load
-  container.read(galleryControllerProvider.notifier).loadPhotos();
+    await SampleDataSeeder.seedInitialDataIfNeeded(photoRepo, albumRepo);
+    await container.read(galleryControllerProvider.notifier).loadPhotos();
+  } catch (e, stack) {
+    debugPrint('Startup initialization error: $e\n$stack');
+  }
 
   runApp(
     UncontrolledProviderScope(
