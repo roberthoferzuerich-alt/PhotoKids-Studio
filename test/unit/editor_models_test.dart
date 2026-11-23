@@ -9,6 +9,7 @@ void main() {
       expect(CropAspectRatio.square1x1.numericRatio, equals(1.0));
       expect(CropAspectRatio.ratio4x3.numericRatio, closeTo(1.333, 0.01));
       expect(CropAspectRatio.ratio16x9.numericRatio, closeTo(1.777, 0.01));
+      expect(CropAspectRatio.ratio9x16.numericRatio, closeTo(0.5625, 0.01));
       expect(CropAspectRatio.ratio3x2.numericRatio, equals(1.5));
     });
 
@@ -41,6 +42,24 @@ void main() {
       expect(adjusted.brightness, equals(0.2));
       expect(adjusted.contrast, equals(1.4));
       expect(adjusted.saturation, equals(1.0));
+    });
+
+    test('WebPhotoSizes contains standard modern web resolutions', () {
+      expect(WebPhotoSizes.standardPresets.isNotEmpty, isTrue);
+
+      final fhd = WebPhotoSizes.standardPresets.firstWhere((p) => p.id == 'web_fhd');
+      expect(fhd.width, equals(1920));
+      expect(fhd.height, equals(1080));
+      expect(fhd.resolutionLabel, equals('1920 × 1080 px'));
+
+      final insta = WebPhotoSizes.standardPresets.firstWhere((p) => p.id == 'web_insta_square');
+      expect(insta.width, equals(1080));
+      expect(insta.height, equals(1080));
+      expect(insta.aspectRatio, equals(1.0));
+
+      final story = WebPhotoSizes.standardPresets.firstWhere((p) => p.id == 'web_story');
+      expect(story.width, equals(1080));
+      expect(story.height, equals(1920));
     });
   });
 }

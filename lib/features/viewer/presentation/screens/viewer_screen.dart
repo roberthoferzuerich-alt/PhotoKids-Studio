@@ -277,6 +277,17 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
                     ),
                     OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.turquoiseLight,
+                        side: const BorderSide(color: AppColors.turquoiseSecondary),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
+                      icon: const Icon(Icons.public_rounded, size: 20),
+                      label: const Text('Web-Größe 🌐', style: TextStyle(fontWeight: FontWeight.w700)),
+                      onPressed: () => context.push('/editor', extra: photo),
+                    ),
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.white,
                         side: const BorderSide(color: Colors.white70),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),

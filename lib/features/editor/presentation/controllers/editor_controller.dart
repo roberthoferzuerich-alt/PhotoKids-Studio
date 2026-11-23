@@ -12,6 +12,7 @@ import 'package:denis_phote_world/services/image/image_processing_service.dart';
 enum EditorActiveTool {
   none,
   crop,
+  webSize,
   filters,
   draw,
   text,
@@ -24,6 +25,9 @@ class EditorState {
   final PhotoEntity? photo;
   final EditorActiveTool activeTool;
   final CropAspectRatio cropRatio;
+  final WebPhotoPreset? selectedWebPreset;
+  final int? targetWidth;
+  final int? targetHeight;
   final List<DrawingStroke> strokes;
   final List<DrawingStroke> undoneStrokes;
   final Color currentDrawColor;
@@ -43,6 +47,9 @@ class EditorState {
     this.photo,
     this.activeTool = EditorActiveTool.none,
     this.cropRatio = CropAspectRatio.free,
+    this.selectedWebPreset,
+    this.targetWidth,
+    this.targetHeight,
     this.strokes = const [],
     this.undoneStrokes = const [],
     this.currentDrawColor = Colors.pinkAccent,
@@ -63,6 +70,9 @@ class EditorState {
     PhotoEntity? photo,
     EditorActiveTool? activeTool,
     CropAspectRatio? cropRatio,
+    WebPhotoPreset? selectedWebPreset,
+    int? targetWidth,
+    int? targetHeight,
     List<DrawingStroke>? strokes,
     List<DrawingStroke>? undoneStrokes,
     Color? currentDrawColor,
@@ -82,6 +92,9 @@ class EditorState {
       photo: photo ?? this.photo,
       activeTool: activeTool ?? this.activeTool,
       cropRatio: cropRatio ?? this.cropRatio,
+      selectedWebPreset: selectedWebPreset ?? this.selectedWebPreset,
+      targetWidth: targetWidth ?? this.targetWidth,
+      targetHeight: targetHeight ?? this.targetHeight,
       strokes: strokes ?? this.strokes,
       undoneStrokes: undoneStrokes ?? this.undoneStrokes,
       currentDrawColor: currentDrawColor ?? this.currentDrawColor,
@@ -113,6 +126,22 @@ class EditorNotifier extends StateNotifier<EditorState> {
     state = state.copyWith(cropRatio: ratio);
   }
 
+  void applyWebPreset(WebPhotoPreset preset) {
+    state = state.copyWith(
+      cropRatio: preset.cropRatio,
+      selectedWebPreset: preset,
+      targetWidth: preset.width,
+      targetHeight: preset.height,
+    );
+  }
+
+  void applyCustomSize(int width, int height) {
+    state = state.copyWith(
+      targetWidth: width,
+      targetHeight: height,
+    );
+  }
+
   void setDrawColor(Color color) {
     state = state.copyWith(currentDrawColor: color);
   }
@@ -128,7 +157,7 @@ class EditorNotifier extends StateNotifier<EditorState> {
   void addStroke(DrawingStroke stroke) {
     state = state.copyWith(
       strokes: [...state.strokes, stroke],
-      undoneStrokes: [], // clear redo
+      undoneStrokes: [],
     );
   }
 
@@ -218,6 +247,8 @@ class EditorNotifier extends StateNotifier<EditorState> {
       final processedBytes = await ImageProcessingService.processImage(
         ImageProcessInput(
           imageBytes: bytes,
+          resizeWidth: state.targetWidth,
+          resizeHeight: state.targetHeight,
           rotateDegrees: state.rotationDegrees,
           flipHorizontal: state.flipHorizontal,
           flipVertical: state.flipVertical,
@@ -243,12 +274,12 @@ class EditorNotifier extends StateNotifier<EditorState> {
         fileName: newFileName,
         fileExtension: 'jpg',
         fileSizeBytes: processedBytes.lengthInBytes,
-        width: current.width,
-        height: current.height,
+        width: state.targetWidth ?? current.width,
+        height: state.targetHeight ?? current.height,
         dateTaken: DateTime.now(),
         dateAdded: DateTime.now(),
         category: 'Bearbeitet 🎨',
-        tags: [...current.tags, 'bearbeitet', 'kunst'],
+        tags: [...current.tags, 'bearbeitet', if (state.selectedWebPreset != null) 'web_optimiert'],
       );
 
       final repo = _ref.read(photoRepositoryProvider);
