@@ -171,6 +171,25 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
 
+          // Über Robert Hofer / About Me
+          Card(
+            child: ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: AppColors.pinkSoft,
+                  shape: BoxShape.circle,
+                ),
+                child: const Text('👨‍💻', style: TextStyle(fontSize: 22)),
+              ),
+              title: const Text('Über Robert Hofer 🇨🇭', style: TextStyle(fontWeight: FontWeight.w800)),
+              subtitle: const Text('Zürich • robert.hofer.zuerich@bluewin.ch • Herzlich Eingeladen!'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () => context.push('/about'),
+            ),
+          ),
+          const SizedBox(height: 12),
+
           // Slideshow Speed
           Card(
             child: Padding(

@@ -4,6 +4,7 @@ import 'package:denis_phote_world/features/albums/presentation/screens/albums_sc
 import 'package:denis_phote_world/features/cloud/presentation/screens/cloud_screen.dart';
 import 'package:denis_phote_world/features/editor/presentation/screens/editor_screen.dart';
 import 'package:denis_phote_world/features/gallery/presentation/screens/gallery_screen.dart';
+import 'package:denis_phote_world/features/settings/presentation/screens/about_me.dart';
 import 'package:denis_phote_world/features/settings/presentation/screens/settings_screen.dart';
 import 'package:denis_phote_world/features/slideshow/presentation/screens/slideshow_screen.dart';
 import 'package:denis_phote_world/features/viewer/presentation/screens/viewer_screen.dart';
@@ -36,6 +37,10 @@ final appRouter = GoRouter(
         GoRoute(
           path: '/cloud',
           builder: (context, state) => const CloudScreen(),
+        ),
+        GoRoute(
+          path: '/about',
+          builder: (context, state) => const AboutMeScreen(),
         ),
       ],
     ),
