@@ -1,0 +1,49 @@
+name: denis_phote_world
+description: "PhotoKids Studio - Moderne & kindgerechte Fotoverwaltungs- und Bildbearbeitungs-App."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.14.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management & Architecture
+  flutter_riverpod: ^2.6.1
+  equatable: ^2.0.7
+
+  # Navigation & Routing
+  go_router: ^14.8.1
+
+  # Local Persistence
+  sqflite: ^2.4.1
+  sqflite_common_ffi: ^2.3.4+4
+  shared_preferences: ^2.5.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # File System & Paths
+  path_provider: ^2.1.5
+  path: ^1.9.1
+  file_picker: ^8.1.7
+
+  # Image Processing & Utilities
+  image: ^4.5.3
+  uuid: ^4.5.1
+  intl: ^0.20.2
+  crypto: ^3.0.6
+  share_plus: ^10.1.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/stickers/
