@@ -141,7 +141,7 @@ class AboutMeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  // Email Chip with Copy Action
+                  // Email Chip with Copy Action (Responsive & Overflow-Safe)
                   InkWell(
                     onTap: () => _copyEmail(context),
                     borderRadius: BorderRadius.circular(20),
@@ -157,12 +157,17 @@ class AboutMeScreen extends StatelessWidget {
                         children: [
                           const Icon(Icons.email_rounded, color: AppColors.turquoiseDark, size: 18),
                           const SizedBox(width: 8),
-                          const Text(
-                            'robert.hofer.zuerich@bluewin.ch',
-                            style: TextStyle(
-                              color: AppColors.turquoiseDark,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 13,
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: const Text(
+                                'robert.hofer.zuerich@bluewin.ch',
+                                style: TextStyle(
+                                  color: AppColors.turquoiseDark,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 13,
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(width: 6),
@@ -317,25 +322,31 @@ class AboutMeScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.turquoiseSecondary,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     ),
-                    icon: const Icon(Icons.mail_rounded),
-                    label: const Text('E-Mail schreiben', style: TextStyle(fontWeight: FontWeight.bold)),
+                    icon: const Icon(Icons.mail_rounded, size: 20),
+                    label: const FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text('E-Mail schreiben', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
                     onPressed: () => _copyEmail(context),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 Expanded(
                   child: OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.pinkPrimary,
                       side: const BorderSide(color: AppColors.pinkPrimary, width: 1.5),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     ),
-                    icon: const Icon(Icons.share_rounded),
-                    label: const Text('App teilen', style: TextStyle(fontWeight: FontWeight.bold)),
+                    icon: const Icon(Icons.share_rounded, size: 20),
+                    label: const FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text('App teilen', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
                     onPressed: () => _shareApp(context),
                   ),
                 ),

@@ -183,7 +183,11 @@ class SettingsScreen extends ConsumerWidget {
                 child: const Text('👨‍💻', style: TextStyle(fontSize: 22)),
               ),
               title: const Text('Über Robert Hofer 🇨🇭', style: TextStyle(fontWeight: FontWeight.w800)),
-              subtitle: const Text('Zürich • robert.hofer.zuerich@bluewin.ch • Herzlich Eingeladen!'),
+              subtitle: const Text(
+                'Zürich • robert.hofer.zuerich@bluewin.ch • Herzlich Eingeladen!',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () => context.push('/about'),
             ),
