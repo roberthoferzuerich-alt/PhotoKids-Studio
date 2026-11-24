@@ -368,6 +368,30 @@ class AboutMeScreen extends StatelessWidget {
                 onPressed: () => InstallAppDialog.show(context),
               ),
             ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: isDark ? AppColors.pinkLight : AppColors.pinkDark,
+                  side: BorderSide(color: AppColors.pinkPrimary.withValues(alpha: 0.6), width: 1.5),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                ),
+                icon: const Icon(Icons.auto_awesome_rounded, size: 22),
+                label: const Text('Alle 16 Repositories im Web ansehen 🚀', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
+                onPressed: () {
+                  Clipboard.setData(const ClipboardData(text: 'https://roberthoferzuerich-alt.github.io/PhotoKids-Studio/repositories.html'));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('🌐 Link zum Repositories-Showcase kopiert! (https://roberthoferzuerich-alt.github.io/PhotoKids-Studio/repositories.html)'),
+                      backgroundColor: AppColors.pinkPrimary,
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                },
+              ),
+            ),
             const SizedBox(height: 24),
 
             // Footer
