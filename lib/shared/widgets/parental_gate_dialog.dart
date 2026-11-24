@@ -72,6 +72,8 @@ class _ParentalGateDialogState extends ConsumerState<ParentalGateDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       title: Row(
@@ -89,24 +91,34 @@ class _ParentalGateDialogState extends ConsumerState<ParentalGateDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Für Erwachsene: Löse die Matheaufgabe oder gib deine Eltern-PIN ein:',
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(
+                fontSize: 14,
+                color: isDark ? Colors.white.withValues(alpha: 0.9) : const Color(0xFF333333),
+              ),
             ),
             const SizedBox(height: 16),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
               decoration: BoxDecoration(
-                color: AppColors.yellowAccent.withValues(alpha: 0.2),
+                color: isDark
+                    ? AppColors.yellowAccent.withValues(alpha: 0.2)
+                    : AppColors.yellowSoft,
                 borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isDark ? AppColors.yellowAccent.withValues(alpha: 0.6) : AppColors.yellowDark,
+                  width: 1.5,
+                ),
               ),
               child: Center(
                 child: Text(
                   'Wie viel ist $num1 × $num2 ?',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF6A4E00),
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? const Color(0xFFFFE082) : const Color(0xFF6A4E00),
+                    letterSpacing: 0.5,
                   ),
                 ),
               ),
