@@ -181,6 +181,21 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
               ),
         actions: [
           IconButton(
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.dark
+                  ? Icons.light_mode_rounded
+                  : Icons.dark_mode_rounded,
+              color: AppColors.yellowDark,
+            ),
+            tooltip: Theme.of(context).brightness == Brightness.dark
+                ? 'Hellen Modus aktivieren ☀️'
+                : 'Dunklen Modus (Dark Mode) aktivieren 🌙',
+            onPressed: () {
+              final isDark = Theme.of(context).brightness == Brightness.dark;
+              ref.read(settingsControllerProvider.notifier).setThemeMode(isDark ? 'light' : 'dark');
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.install_mobile_rounded, color: AppColors.turquoiseSecondary),
             tooltip: 'App aufs Handy laden 📲 (Android / Apple)',
             onPressed: () => InstallAppDialog.show(context),

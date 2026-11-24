@@ -110,6 +110,33 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
 
+          // Erscheinungsbild / Dark Mode Switch
+          Card(
+            child: SwitchListTile(
+              secondary: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.purpleSoft.withValues(alpha: 0.3) : AppColors.yellowSoft,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(isDark ? '🌙' : '☀️', style: const TextStyle(fontSize: 22)),
+              ),
+              title: const Text(
+                'Dunkelmodus (Dark Mode)',
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+              ),
+              subtitle: Text(
+                isDark ? 'Aktiv (Augenschonend & moderner Kontrast)' : 'Deaktiviert (Heller Tagesmodus)',
+              ),
+              value: isDark,
+              activeColor: AppColors.purpleAccent,
+              onChanged: (active) {
+                settingsNotifier.setThemeMode(active ? 'dark' : 'light');
+              },
+            ),
+          ),
+          const SizedBox(height: 12),
+
           // Eltern-PIN Section
           Card(
             child: ListTile(

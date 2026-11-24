@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,81 +17,184 @@
     .animate-fadeInUp {
       animation: fadeInUp 0.4s ease-out forwards;
     }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Dark Theme Styles (Default) */
+    body.dark {
+      background-color: #120E1C;
+      color: #f1f5f9;
     }
-    .glass-card:hover {
-      transform: translateY(-5px);
+    body.dark .ambient-glow {
+      background: linear-gradient(to right, rgba(255, 82, 119, 0.2), rgba(156, 39, 176, 0.2), rgba(0, 196, 180, 0.2));
+    }
+    body.dark .glass-card {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+    body.dark .glass-card:hover {
       background: rgba(255, 255, 255, 0.08);
       border-color: rgba(255, 82, 119, 0.4);
       box-shadow: 0 16px 32px -8px rgba(255, 82, 119, 0.25);
     }
+    body.dark .modal-inner {
+      background-color: #1C162A;
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #f1f5f9;
+    }
+
+    /* Light Theme Styles */
+    body.light {
+      background-color: #FAF8FC;
+      color: #1e293b;
+    }
+    body.light .ambient-glow {
+      background: linear-gradient(to right, rgba(255, 82, 119, 0.12), rgba(156, 39, 176, 0.08), rgba(0, 196, 180, 0.12));
+    }
+    body.light .glass-card {
+      background: #FFFFFF;
+      border-color: rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+    }
+    body.light .glass-card:hover {
+      transform: translateY(-5px);
+      background: #FFFFFF;
+      border-color: rgba(255, 82, 119, 0.5);
+      box-shadow: 0 16px 32px -6px rgba(255, 82, 119, 0.2);
+    }
+    body.light .text-gradient-header {
+      background: linear-gradient(to right, #1e293b, #334155, #be185d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    body.light .header-subtitle {
+      color: #64748b;
+    }
+    body.light .card-title {
+      color: #0f172a;
+    }
+    body.light .card-desc {
+      color: #64748b;
+    }
+    body.light .card-icon-bg {
+      background: #F4EFF8;
+      border-color: #E6DEF0;
+    }
+    body.light .search-box {
+      background: #FFFFFF;
+      border-color: #E2E8F0;
+      color: #0f172a;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    body.light .search-box::placeholder {
+      color: #94a3b8;
+    }
+    body.light .filter-unselected {
+      background: #FFFFFF;
+      color: #475569;
+      border: 1px solid #E2E8F0;
+    }
+    body.light .filter-unselected:hover {
+      background: #F1F5F9;
+    }
+    body.light .modal-inner {
+      background-color: #FFFFFF;
+      border-color: #E2E8F0;
+      color: #0f172a;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    body.light .modal-desc {
+      color: #475569;
+    }
+    body.light .modal-badge {
+      background: #F1F5F9;
+      color: #334155;
+      border-color: #E2E8F0;
+    }
+    body.light .modal-close {
+      background: #F1F5F9;
+      color: #64748b;
+    }
+    body.light .modal-close:hover {
+      background: #E2E8F0;
+      color: #0f172a;
+    }
+
+    .glass-card {
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
     .modal-backdrop {
-      background: rgba(15, 12, 25, 0.82);
+      background: rgba(15, 12, 25, 0.85);
       backdrop-filter: blur(10px);
     }
-    /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(0,0,0,0.1);
     }
     ::-webkit-scrollbar-thumb {
       background: rgba(255, 82, 119, 0.3);
       border-radius: 4px;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 82, 119, 0.6);
-    }
   </style>
 </head>
-<body class="bg-[#120E1C] text-slate-100 min-h-screen font-sans selection:bg-[#FF5277] selection:text-white pb-16">
+<body id="appBody" class="dark min-h-screen font-sans selection:bg-[#FF5277] selection:text-white pb-16 transition-colors duration-300">
 
   <!-- Top Ambient Glow -->
-  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-gradient-to-r from-[#FF5277]/20 via-[#9C27B0]/20 to-[#00C4B4]/20 blur-[120px] pointer-events-none -z-10"></div>
+  <div class="ambient-glow fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] blur-[120px] pointer-events-none -z-10 transition-all duration-500"></div>
 
   <!-- Header Section -->
-  <header class="max-w-6xl mx-auto pt-10 pb-6 px-4 sm:px-6 text-center">
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-pink-400 mb-4 animate-fadeInUp">
-      <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-      <span>Robert Hofer • Zürich 🇨🇭</span>
-      <span class="text-white/40">•</span>
-      <span>GitHub Portfolio Showcase</span>
-    </div>
-
-    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-pink-300 bg-clip-text text-transparent mb-3 animate-fadeInUp">
-      Meine Open-Source Repositories 🚀
-    </h1>
-    <p class="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto mb-8 animate-fadeInUp">
-      Entdecke alle 16 Projekte von Robert Hofer – von modernen Flutter-Apps für Kinder und Kreative bis hin zu performanten Backend- und IoT-Lösungen. Klicke auf ein Projekt für alle Details.
-    </p>
-
-    <!-- Search & Filter Controls -->
-    <div class="max-w-2xl mx-auto flex flex-col sm:flex-row gap-3 items-center justify-between mb-8">
-      <!-- Search Input -->
-      <div class="relative w-full sm:w-80">
-        <input 
-          type="text" 
-          id="searchInput" 
-          placeholder="Repository suchen (z.B. PhotoKids, Piano)..."
-          class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/5 border border-white/10 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/20 text-sm text-white placeholder-slate-500 transition-all"
-        />
-        <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-        </svg>
+  <header class="max-w-6xl mx-auto pt-8 pb-6 px-4 sm:px-6">
+    
+    <!-- Top Bar with Profile Badge & Dark Mode Button -->
+    <div class="flex items-center justify-between gap-3 mb-6">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-pink-500 animate-fadeInUp shadow-sm">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>Robert Hofer • Zürich 🇨🇭</span>
+        <span class="opacity-40">•</span>
+        <span>GitHub Showcase</span>
       </div>
 
-      <!-- Category Filter Pills -->
-      <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1" id="filterContainer">
-        <button onclick="setFilter('all')" class="filter-btn active px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-pink-500 text-white shadow-lg shadow-pink-500/25" data-filter="all">Alle (16)</button>
-        <button onclick="setFilter('flutter')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white/5 text-slate-300 hover:bg-white/10" data-filter="flutter">Flutter 💙</button>
-        <button onclick="setFilter('php')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white/5 text-slate-300 hover:bg-white/10" data-filter="php">PHP/Laravel 🐘</button>
-        <button onclick="setFilter('other')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white/5 text-slate-300 hover:bg-white/10" data-filter="other">Java & Tools ⚙️</button>
+      <!-- Dark Mode / Light Mode Switch Button -->
+      <button 
+        id="themeToggleBtn" 
+        onclick="toggleTheme()" 
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/15 dark:bg-white/5 dark:hover:bg-white/10 border border-white/15 text-xs sm:text-sm font-bold shadow-lg transition-all duration-300 transform active:scale-95"
+        title="Zwischen Dark Mode und Light Mode wechseln"
+      >
+        <span id="themeIcon" class="text-base">🌙</span>
+        <span id="themeText">Dark Mode</span>
+      </button>
+    </div>
+
+    <div class="text-center">
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gradient-header bg-gradient-to-r from-white via-slate-100 to-pink-300 bg-clip-text text-transparent mb-3 animate-fadeInUp">
+        Meine Open-Source Repositories 🚀
+      </h1>
+      <p class="header-subtitle text-sm sm:text-base text-slate-400 max-w-2xl mx-auto mb-8 animate-fadeInUp">
+        Entdecke alle 16 Projekte von Robert Hofer – von modernen Flutter-Apps für Kinder und Kreative bis hin zu performanten Backend- und IoT-Lösungen. Klicke auf ein Projekt für alle Details.
+      </p>
+
+      <!-- Search & Filter Controls -->
+      <div class="max-w-2xl mx-auto flex flex-col sm:flex-row gap-3 items-center justify-between mb-8">
+        <!-- Search Input -->
+        <div class="relative w-full sm:w-80">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Repository suchen (z.B. PhotoKids, Piano)..."
+            class="search-box w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/5 border border-white/10 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/20 text-sm text-inherit placeholder-slate-400 transition-all"
+          />
+          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1" id="filterContainer">
+          <button onclick="setFilter('all')" class="filter-btn active px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-pink-500 text-white shadow-lg shadow-pink-500/25" data-filter="all">Alle (16)</button>
+          <button onclick="setFilter('flutter')" class="filter-btn filter-unselected px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white/5 text-slate-300 hover:bg-white/10" data-filter="flutter">Flutter 💙</button>
+          <button onclick="setFilter('php')" class="filter-btn filter-unselected px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white/5 text-slate-300 hover:bg-white/10" data-filter="php">PHP/Laravel 🐘</button>
+          <button onclick="setFilter('other')" class="filter-btn filter-unselected px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white/5 text-slate-300 hover:bg-white/10" data-filter="other">Java & Tools ⚙️</button>
+        </div>
       </div>
     </div>
   </header>
@@ -99,23 +202,23 @@
   <!-- Repository Grid -->
   <main class="max-w-6xl mx-auto px-4 sm:px-6">
     <div id="repoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- Repositories will be injected here via JavaScript -->
+      <!-- Injected via JavaScript -->
     </div>
 
     <!-- Empty State -->
     <div id="emptyState" class="hidden text-center py-16">
       <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center text-3xl">🔍</div>
-      <h3 class="text-lg font-bold text-slate-200">Keine Repositories gefunden</h3>
+      <h3 class="text-lg font-bold text-slate-300">Keine Repositories gefunden</h3>
       <p class="text-sm text-slate-500">Versuche einen anderen Suchbegriff oder Filter.</p>
     </div>
   </main>
 
   <!-- Detail Modal -->
   <div id="detailModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop opacity-0 pointer-events-none transition-all duration-300">
-    <div id="modalBox" class="bg-[#1C162A] border border-white/15 w-full max-w-xl rounded-3xl p-6 sm:p-8 shadow-2xl transform scale-95 transition-all duration-300 overflow-hidden relative">
+    <div id="modalBox" class="modal-inner border w-full max-w-xl rounded-3xl p-6 sm:p-8 shadow-2xl transform scale-95 transition-all duration-300 overflow-hidden relative">
       
       <!-- Close Button -->
-      <button onclick="closeModal()" class="absolute top-5 right-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
+      <button onclick="closeModal()" class="modal-close absolute top-5 right-5 p-2 rounded-full transition-colors">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
@@ -128,39 +231,39 @@
         </div>
         <div>
           <div class="flex items-center gap-2 mb-1">
-            <span id="modalLanguage" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Dart</span>
-            <span id="modalCategory" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/5 text-slate-300">Mobile & Web</span>
+            <span id="modalLanguage" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-500 border border-emerald-500/30">Dart</span>
+            <span id="modalCategory" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/5 text-slate-400 border border-white/10">Mobile & Web</span>
           </div>
-          <h2 id="modalTitle" class="text-2xl font-extrabold text-white">Repository Name</h2>
+          <h2 id="modalTitle" class="text-2xl font-extrabold">Repository Name</h2>
         </div>
       </div>
 
       <!-- Description -->
-      <p id="modalDescription" class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+      <p id="modalDescription" class="modal-desc text-sm sm:text-base leading-relaxed mb-6">
         Beschreibung des Repositories...
       </p>
 
       <!-- Features / Highlights -->
       <div class="mb-6">
-        <h4 class="text-xs uppercase tracking-wider text-pink-400 font-bold mb-3 flex items-center gap-1.5">
+        <h4 class="text-xs uppercase tracking-wider text-pink-500 font-bold mb-3 flex items-center gap-1.5">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
           Highlights & Architektur
         </h4>
-        <ul id="modalHighlights" class="space-y-2 text-xs sm:text-sm text-slate-300">
+        <ul id="modalHighlights" class="space-y-2 text-xs sm:text-sm">
           <!-- Injected via JS -->
         </ul>
       </div>
 
       <!-- Tech Stack Badges -->
       <div class="mb-8">
-        <h4 class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-2.5">Technologie-Stack</h4>
+        <h4 class="text-xs uppercase tracking-wider opacity-60 font-bold mb-2.5">Technologie-Stack</h4>
         <div id="modalTech" class="flex flex-wrap gap-1.5">
           <!-- Injected via JS -->
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-white/10">
+      <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-white/10 dark:border-white/10 border-slate-200">
         <a id="modalBrowserLink" href="#" target="_blank" class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#FF5277] to-[#FF7597] text-white font-bold text-sm shadow-lg shadow-pink-500/25 hover:opacity-95 transition-all">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
           <span>Auf GitHub ansehen</span>
@@ -182,7 +285,7 @@
         category: "flutter",
         icon: "📸",
         language: "Dart",
-        badgeColor: "bg-pink-500/20 text-pink-400 border-pink-500/30",
+        badgeColor: "bg-pink-500/20 text-pink-500 border-pink-500/30",
         shortDesc: "Moderne, kindgerechte und sichere Fotoverwaltungs- und Bildbearbeitungs-App für Android, iOS und Web.",
         fullDesc: "PhotoKids Studio ist eine vollwertige, kinderleichte Foto- und Bildbearbeitungs-App mit spielerischem Material Design 3. Sie bietet ein sicheres Studio zum Malen, Dekorieren und Verwalten von Familienfotos ohne Werbebanner oder Online-Zwang.",
         highlights: [
@@ -201,7 +304,7 @@
         category: "flutter",
         icon: "💬",
         language: "Dart",
-        badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+        badgeColor: "bg-blue-500/20 text-blue-500 border-blue-500/30",
         shortDesc: "Moderne Mobile Chat-Applikation für das ChatConnect-Kommunikationsnetzwerk.",
         fullDesc: "Reaktive Mobile-App für plattformübergreifenden Echtzeitaustausch. Konzipiert für zuverlässige Kommunikation, intuitive Chat-Navigation und Medienversand.",
         highlights: [
@@ -218,7 +321,7 @@
         category: "php",
         icon: "⚡",
         language: "PHP / Blade",
-        badgeColor: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+        badgeColor: "bg-purple-500/20 text-purple-500 border-purple-500/30",
         shortDesc: "Leistungsstarkes Backend & REST/WebSocket-API für das ChatConnect-System.",
         fullDesc: "Zentraler Serverdienst zur Authentifizierung, Sitzungsverwaltung, WebSocket-Broadcasting und dauerhaften Speicherung von Chat-Konversationen.",
         highlights: [
@@ -235,7 +338,7 @@
         category: "other",
         icon: "📚",
         language: "Docs",
-        badgeColor: "bg-slate-500/20 text-slate-300 border-slate-500/30",
+        badgeColor: "bg-slate-500/20 text-slate-400 border-slate-500/30",
         shortDesc: "Vollständige technische Spezifikation und Schnittstellendokumentation für ChatConnect.",
         fullDesc: "Enthält Architekturdiagramme, API-Endpunktdokumentation, Sicherheitsrichtlinien sowie Installationsleitfäden für Entwickler und Administratoren.",
         highlights: [
@@ -252,7 +355,7 @@
         category: "flutter",
         icon: "🖋️",
         language: "Dart",
-        badgeColor: "bg-teal-500/20 text-teal-400 border-teal-500/30",
+        badgeColor: "bg-teal-500/20 text-teal-500 border-teal-500/30",
         shortDesc: "Schlanker Rich-Text Editor und Notizblock für fokussiertes Schreiben.",
         fullDesc: "Eine elegante Notiz- und Schreib-App, die das Erstellen formatierter Texte, Listen und Notizen mit maximaler Übersichtlichkeit und Schnelligkeit ermöglicht.",
         highlights: [
@@ -269,7 +372,7 @@
         category: "flutter",
         icon: "📐",
         language: "Dart",
-        badgeColor: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30",
+        badgeColor: "bg-indigo-500/20 text-indigo-500 border-indigo-500/30",
         shortDesc: "Flutter Web-App zum Skalieren, Zuschneiden und Bearbeiten von Bildern direkt im Browser.",
         fullDesc: "Praktisches Client-Side Bildbearbeitungstool. Bilder werden direkt lokal im Browser skaliert, formatiert und zugeschnitten, ohne sensible Bilddaten an externe Server übertragen zu müssen.",
         highlights: [
@@ -286,7 +389,7 @@
         category: "flutter",
         icon: "🥗",
         language: "Dart",
-        badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+        badgeColor: "bg-emerald-500/20 text-emerald-500 border-emerald-500/30",
         shortDesc: "Gesundheits- & Ernährungs-App zur Erfassung und Auswertung von Nährwert-Punkten.",
         fullDesc: "Begleitet Nutzer auf dem Weg zu gesunder Ernährung. Erfasst Mahlzeiten, berechnet Nährstoff-Scores und visualisiert den täglichen Fortschritt in motivierenden Grafiken.",
         highlights: [
@@ -303,7 +406,7 @@
         category: "flutter",
         icon: "🎹",
         language: "Dart",
-        badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+        badgeColor: "bg-amber-500/20 text-amber-500 border-amber-500/30",
         shortDesc: "Interaktive Klavier- und Musik-App mit virtueller Klaviatur und Soundausgabe.",
         fullDesc: "Eine fröhliche, interaktive Klavier-Anwendung für Kinder und Musikbegeisterte mit sofortigem Audio-Feedback und optischer Tastenanimation.",
         highlights: [
@@ -320,7 +423,7 @@
         category: "flutter",
         icon: "📄",
         language: "Dart",
-        badgeColor: "bg-rose-500/20 text-rose-400 border-rose-500/30",
+        badgeColor: "bg-rose-500/20 text-rose-500 border-rose-500/30",
         shortDesc: "Markdown-zu-PDF Konverter mit Live-Vorschau und professionellem Layout.",
         fullDesc: "Wandelt strukturierte Markdown-Dokumente blitzschnell in saubere, druckfertige PDF-Dateien um. Perfekt für Dokumentationen, Rechnungen und Protokolle.",
         highlights: [
@@ -337,7 +440,7 @@
         category: "php",
         icon: "📅",
         language: "PHP / Blade",
-        badgeColor: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+        badgeColor: "bg-yellow-500/20 text-yellow-600 border-yellow-500/30",
         shortDesc: "Termin-Finder und Umfrage-Tool ähnlich wie Doodle zur einfachen Terminabstimmung.",
         fullDesc: "Eine schlanke Schweizer Alternative zu Doodle für Freunde, Vereine und Teams. Erstelle Terminumfragen ohne Benutzerkonto und finde im Handumdrehen das passende Datum.",
         highlights: [
@@ -354,7 +457,7 @@
         category: "php",
         icon: "🍲",
         language: "PHP",
-        badgeColor: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+        badgeColor: "bg-orange-500/20 text-orange-500 border-orange-500/30",
         shortDesc: "Digitale Rezeptsammlung zum Organisieren, Kochen und Entdecken von Lieblingsrezepten.",
         fullDesc: "Das digitale Familien-Kochbuch: Rezepte übersichtlich speichern, Zutatenmengen anpassen und Schritt-für-Schritt leckere Mahlzeiten zubereiten.",
         highlights: [
@@ -371,7 +474,7 @@
         category: "other",
         icon: "✉️",
         language: "Python / Flutter",
-        badgeColor: "bg-sky-500/20 text-sky-400 border-sky-500/30",
+        badgeColor: "bg-sky-500/20 text-sky-500 border-sky-500/30",
         shortDesc: "Moderner E-Mail-App-Klon mit intuitiver Benutzeroberfläche und Mail-Verwaltung.",
         fullDesc: "Konzeptioneller Nachbau eines modernen Mail-Clients mit Fokus auf intuitive Ordner-Strukturen, schnelle Suche und übersichtliches Threading.",
         highlights: [
@@ -388,7 +491,7 @@
         category: "php",
         icon: "📬",
         language: "PHP",
-        badgeColor: "bg-violet-500/20 text-violet-400 border-violet-500/30",
+        badgeColor: "bg-violet-500/20 text-violet-500 border-violet-500/30",
         shortDesc: "Backend-Dienste und Server-Schnittstellen für die Mail-Clone Applikation.",
         fullDesc: "Stellt Verbindung zu Mailservern her, verwaltet Zugangsdaten sicher und liefert formatierte Maildaten an das Frontend aus.",
         highlights: [
@@ -405,7 +508,7 @@
         category: "php",
         icon: "🍓",
         language: "PHP / Blade",
-        badgeColor: "bg-red-500/20 text-red-400 border-red-500/30",
+        badgeColor: "bg-red-500/20 text-red-500 border-red-500/30",
         shortDesc: "Automatisches Deployment- und Verwaltungstool für Raspberry Pi Einplatinencomputer.",
         fullDesc: "Erleichtert das Ausrollen und Verwalten von Web-Apps und Skripten auf Raspberry Pi Geräten über ein einfaches Web-Dashboard.",
         highlights: [
@@ -422,7 +525,7 @@
         category: "php",
         icon: "🔬",
         language: "PHP",
-        badgeColor: "bg-pink-500/20 text-pink-400 border-pink-500/30",
+        badgeColor: "bg-pink-500/20 text-pink-500 border-pink-500/30",
         shortDesc: "Demo Laravel-Applikation zum Testen und Validieren der pi-deployer Pipeline.",
         fullDesc: "Testumgebung mit Health-Checks und Status-Endpunkten, um automatisierte Aktualisierungen über den pi-deployer zuverlässig zu erproben.",
         highlights: [
@@ -439,7 +542,7 @@
         category: "other",
         icon: "🧊",
         language: "Java",
-        badgeColor: "bg-red-600/20 text-red-400 border-red-600/30",
+        badgeColor: "bg-red-600/20 text-red-500 border-red-600/30",
         shortDesc: "3D-Viewer zur Betrachtung und Analyse von STL-Dateien (3D-Druck / CAD).",
         fullDesc: "Desktop-Software in Java zur Visualisierung von 3D-Geometrien im stereolithografischen STL-Format mit Rotation, Zoom und Schnittmodellierung.",
         highlights: [
@@ -454,6 +557,41 @@
 
     let currentFilter = 'all';
     let searchQuery = '';
+    let currentTheme = localStorage.getItem('theme') || 'dark';
+
+    function initTheme() {
+      applyTheme(currentTheme);
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', currentTheme);
+      applyTheme(currentTheme);
+    }
+
+    function applyTheme(theme) {
+      const body = document.getElementById('appBody');
+      const themeIcon = document.getElementById('themeIcon');
+      const themeText = document.getElementById('themeText');
+      const toggleBtn = document.getElementById('themeToggleBtn');
+
+      if (theme === 'dark') {
+        body.classList.remove('light');
+        body.classList.add('dark');
+        document.documentElement.classList.add('dark');
+        themeIcon.innerText = '🌙';
+        themeText.innerText = 'Dark Mode';
+        toggleBtn.className = "inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs sm:text-sm font-bold shadow-lg transition-all duration-300 text-white";
+      } else {
+        body.classList.remove('dark');
+        body.classList.add('light');
+        document.documentElement.classList.remove('dark');
+        themeIcon.innerText = '☀️';
+        themeText.innerText = 'Light Mode';
+        toggleBtn.className = "inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white hover:bg-slate-100 border border-slate-200 text-xs sm:text-sm font-bold shadow-md transition-all duration-300 text-slate-800";
+      }
+      renderRepositories();
+    }
 
     function renderRepositories() {
       const grid = document.getElementById('repoGrid');
@@ -477,29 +615,29 @@
       filtered.forEach((repo, index) => {
         const card = document.createElement('div');
         card.className = 'glass-card rounded-3xl p-6 flex flex-col justify-between cursor-pointer animate-fadeInUp';
-        card.style.animationDelay = `${index * 40}ms`;
+        card.style.animationDelay = `${index * 35}ms`;
         card.onclick = () => openModal(repo.id);
 
         card.innerHTML = `
           <div>
             <div class="flex items-center justify-between mb-4">
-              <span class="text-3xl p-2.5 rounded-2xl bg-white/5 border border-white/10">${repo.icon}</span>
+              <span class="card-icon-bg text-3xl p-2.5 rounded-2xl border">${repo.icon}</span>
               <span class="px-2.5 py-1 rounded-full text-xs font-bold border ${repo.badgeColor}">${repo.language}</span>
             </div>
-            <h3 class="text-lg font-bold text-white mb-2 group-hover:text-pink-400 transition-colors flex items-center gap-2">
+            <h3 class="card-title text-lg font-bold mb-2 group-hover:text-pink-500 transition-colors flex items-center gap-2">
               ${repo.name}
-              ${repo.liveUrl ? '<span class="text-[10px] bg-teal-500/20 text-teal-400 px-2 py-0.5 rounded-full font-bold border border-teal-500/30">Live App 🚀</span>' : ''}
+              ${repo.liveUrl ? '<span class="text-[10px] bg-teal-500/20 text-teal-500 px-2 py-0.5 rounded-full font-bold border border-teal-500/30">Live App 🚀</span>' : ''}
             </h3>
-            <p class="text-slate-400 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-4">
+            <p class="card-desc text-xs sm:text-sm line-clamp-3 leading-relaxed mb-4">
               ${repo.shortDesc}
             </p>
           </div>
           
-          <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs">
-            <span class="text-pink-400 font-bold inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+          <div class="pt-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-xs">
+            <span class="text-pink-500 font-bold inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
               Details ansehen →
             </span>
-            <span class="text-slate-500 font-medium">GitHub Repo ↗</span>
+            <span class="opacity-60 font-medium">GitHub Repo ↗</span>
           </div>
         `;
         grid.appendChild(card);
@@ -512,7 +650,7 @@
         if (btn.dataset.filter === filter) {
           btn.className = "filter-btn active px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-pink-500 text-white shadow-lg shadow-pink-500/25";
         } else {
-          btn.className = "filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white/5 text-slate-300 hover:bg-white/10";
+          btn.className = "filter-btn filter-unselected px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all";
         }
       });
       renderRepositories();
@@ -538,15 +676,15 @@
       const hlContainer = document.getElementById('modalHighlights');
       hlContainer.innerHTML = repo.highlights.map(h => `
         <li class="flex items-start gap-2">
-          <span class="text-pink-400 font-bold">✓</span>
-          <span>${h}</span>
+          <span class="text-pink-500 font-bold">✓</span>
+          <span class="opacity-90">${h}</span>
         </li>
       `).join('');
 
       // Tech Stack
       const techContainer = document.getElementById('modalTech');
       techContainer.innerHTML = repo.tech.map(t => `
-        <span class="px-2.5 py-1 rounded-xl bg-white/5 text-slate-300 border border-white/10 text-xs font-semibold">
+        <span class="modal-badge px-2.5 py-1 rounded-xl text-xs font-semibold border">
           ${t}
         </span>
       `).join('');
@@ -586,8 +724,8 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // Initial Render
-    renderRepositories();
+    // Init Theme on load
+    initTheme();
   </script>
 </body>
 </html>
