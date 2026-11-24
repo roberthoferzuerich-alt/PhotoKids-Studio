@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:denis_phote_world/core/di/app_providers.dart';
-import 'package:denis_phote_world/domain/repositories/i_settings_repository.dart';
+import 'package:photokids_studio/core/di/app_providers.dart';
+import 'package:photokids_studio/domain/repositories/i_settings_repository.dart';
 
 class SettingsState {
   final bool isKidMode;

@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:denis_phote_world/core/database/database_service.dart';
-import 'package:denis_phote_world/data/models/album_model.dart';
+import 'package:photokids_studio/core/database/database_service.dart';
+import 'package:photokids_studio/data/models/album_model.dart';
 
 class AlbumLocalDatasource {
   Future<Database> get _db => DatabaseService.database;

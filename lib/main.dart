@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:denis_phote_world/core/constants/app_constants.dart';
-import 'package:denis_phote_world/core/di/app_providers.dart';
-import 'package:denis_phote_world/core/router/app_router.dart';
-import 'package:denis_phote_world/core/theme/app_theme.dart';
-import 'package:denis_phote_world/core/utils/sample_data_seeder.dart';
-import 'package:denis_phote_world/features/gallery/presentation/controllers/gallery_controller.dart';
-import 'package:denis_phote_world/features/settings/presentation/controllers/settings_controller.dart';
+import 'package:photokids_studio/core/constants/app_constants.dart';
+import 'package:photokids_studio/core/di/app_providers.dart';
+import 'package:photokids_studio/core/router/app_router.dart';
+import 'package:photokids_studio/core/theme/app_theme.dart';
+import 'package:photokids_studio/core/utils/sample_data_seeder.dart';
+import 'package:photokids_studio/features/gallery/presentation/controllers/gallery_controller.dart';
+import 'package:photokids_studio/features/settings/presentation/controllers/settings_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

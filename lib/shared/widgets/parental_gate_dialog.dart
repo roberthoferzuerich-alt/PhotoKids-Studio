@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:denis_phote_world/core/theme/app_colors.dart';
-import 'package:denis_phote_world/features/settings/presentation/controllers/settings_controller.dart';
+import 'package:photokids_studio/core/theme/app_colors.dart';
+import 'package:photokids_studio/features/settings/presentation/controllers/settings_controller.dart';
 
 /// Parental Gate Dialog:
 /// Protects settings, permanent deletion, and cloud sync.

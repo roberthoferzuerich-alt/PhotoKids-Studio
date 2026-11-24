@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:denis_phote_world/core/theme/app_colors.dart';
+import 'package:photokids_studio/core/theme/app_colors.dart';
 
 class BeforeAfterSlider extends StatefulWidget {
   final Widget beforeWidget;

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:denis_phote_world/core/di/app_providers.dart';
-import 'package:denis_phote_world/core/theme/app_colors.dart';
-import 'package:denis_phote_world/core/utils/sample_data_seeder.dart';
-import 'package:denis_phote_world/features/gallery/presentation/controllers/gallery_controller.dart';
-import 'package:denis_phote_world/features/settings/presentation/controllers/settings_controller.dart';
-import 'package:denis_phote_world/shared/widgets/parental_gate_dialog.dart';
+import 'package:photokids_studio/core/di/app_providers.dart';
+import 'package:photokids_studio/core/theme/app_colors.dart';
+import 'package:photokids_studio/core/utils/sample_data_seeder.dart';
+import 'package:photokids_studio/features/gallery/presentation/controllers/gallery_controller.dart';
+import 'package:photokids_studio/features/settings/presentation/controllers/settings_controller.dart';
+import 'package:photokids_studio/shared/widgets/install_app_dialog.dart';
+import 'package:photokids_studio/shared/widgets/parental_gate_dialog.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -167,6 +168,25 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: const Text('OneDrive, Google Drive, Dropbox, iCloud Backup-Status'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () => context.push('/cloud'),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // App auf Smartphone installieren (Android & Apple)
+          Card(
+            child: ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: AppColors.turquoiseSoft,
+                  shape: BoxShape.circle,
+                ),
+                child: const Text('📲', style: TextStyle(fontSize: 22)),
+              ),
+              title: const Text('App aufs Smartphone installieren 📱', style: TextStyle(fontWeight: FontWeight.w800)),
+              subtitle: const Text('Anleitung & QR-Code für Android (Samsung, Pixel) & Apple (iPhone, iPad).'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () => InstallAppDialog.show(context),
             ),
           ),
           const SizedBox(height: 12),

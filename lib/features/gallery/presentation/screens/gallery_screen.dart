@@ -7,12 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 import 'package:uuid/uuid.dart';
-import 'package:denis_phote_world/core/constants/app_constants.dart';
-import 'package:denis_phote_world/core/theme/app_colors.dart';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
-import 'package:denis_phote_world/features/gallery/presentation/controllers/gallery_controller.dart';
-import 'package:denis_phote_world/features/settings/presentation/controllers/settings_controller.dart';
-import 'package:denis_phote_world/shared/widgets/kid_button.dart';
+import 'package:photokids_studio/core/constants/app_constants.dart';
+import 'package:photokids_studio/core/theme/app_colors.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/features/gallery/presentation/controllers/gallery_controller.dart';
+import 'package:photokids_studio/features/settings/presentation/controllers/settings_controller.dart';
+import 'package:photokids_studio/shared/widgets/install_app_dialog.dart';
+import 'package:photokids_studio/shared/widgets/kid_button.dart';
 
 class GalleryScreen extends ConsumerStatefulWidget {
   const GalleryScreen({super.key});
@@ -179,6 +180,11 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                 ],
               ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.install_mobile_rounded, color: AppColors.turquoiseSecondary),
+            tooltip: 'App aufs Handy laden 📲 (Android / Apple)',
+            onPressed: () => InstallAppDialog.show(context),
+          ),
           if (!_isSearching)
             IconButton(
               icon: const Icon(Icons.search_rounded),

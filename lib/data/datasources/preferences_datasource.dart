@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:denis_phote_world/core/constants/app_constants.dart';
+import 'package:photokids_studio/core/constants/app_constants.dart';
 
 class PreferencesDatasource {
   static const String _keyKidMode = 'pref_kid_mode';

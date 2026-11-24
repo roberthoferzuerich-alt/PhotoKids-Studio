@@ -5,12 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:denis_phote_world/core/theme/app_colors.dart';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
-import 'package:denis_phote_world/features/editor/presentation/widgets/greeting_card_modal.dart';
-import 'package:denis_phote_world/features/gallery/presentation/controllers/gallery_controller.dart';
-import 'package:denis_phote_world/features/settings/presentation/controllers/settings_controller.dart';
-import 'package:denis_phote_world/shared/widgets/parental_gate_dialog.dart';
+import 'package:photokids_studio/core/theme/app_colors.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/features/editor/presentation/widgets/greeting_card_modal.dart';
+import 'package:photokids_studio/features/gallery/presentation/controllers/gallery_controller.dart';
+import 'package:photokids_studio/features/settings/presentation/controllers/settings_controller.dart';
+import 'package:photokids_studio/shared/widgets/parental_gate_dialog.dart';
 
 class ViewerScreen extends ConsumerStatefulWidget {
   final PhotoEntity? photo;

@@ -1,4 +1,4 @@
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
 
 abstract class IPhotoRepository {
   Future<List<PhotoEntity>> getAllPhotos({bool includeDeleted = false});

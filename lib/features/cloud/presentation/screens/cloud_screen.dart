@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:denis_phote_world/core/theme/app_colors.dart';
-import 'package:denis_phote_world/services/cloud/cloud_sync_service.dart';
+import 'package:photokids_studio/core/theme/app_colors.dart';
+import 'package:photokids_studio/services/cloud/cloud_sync_service.dart';
 
 class CloudScreen extends StatefulWidget {
   const CloudScreen({super.key});

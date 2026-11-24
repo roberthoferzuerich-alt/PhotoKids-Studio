@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:denis_phote_world/core/database/database_service.dart';
-import 'package:denis_phote_world/data/models/photo_model.dart';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/core/database/database_service.dart';
+import 'package:photokids_studio/data/models/photo_model.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
 
 class PhotoLocalDatasource {
   Future<Database> get _db => DatabaseService.database;

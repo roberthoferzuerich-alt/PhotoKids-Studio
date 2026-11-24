@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
 
 void main() {
   group('PhotoEntity Unit Tests', () {

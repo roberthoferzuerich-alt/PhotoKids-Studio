@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:denis_phote_world/core/di/app_providers.dart';
-import 'package:denis_phote_world/domain/entities/album_entity.dart';
-import 'package:denis_phote_world/domain/repositories/i_album_repository.dart';
+import 'package:photokids_studio/core/di/app_providers.dart';
+import 'package:photokids_studio/domain/entities/album_entity.dart';
+import 'package:photokids_studio/domain/repositories/i_album_repository.dart';
 
 class AlbumsState {
   final List<AlbumEntity> albums;

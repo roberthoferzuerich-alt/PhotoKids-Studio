@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:uuid/uuid.dart';
-import 'package:denis_phote_world/core/di/app_providers.dart';
-import 'package:denis_phote_world/domain/entities/editor_models.dart';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
-import 'package:denis_phote_world/services/image/image_processing_service.dart';
+import 'package:photokids_studio/core/di/app_providers.dart';
+import 'package:photokids_studio/domain/entities/editor_models.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/services/image/image_processing_service.dart';
 
 enum EditorActiveTool {
   none,

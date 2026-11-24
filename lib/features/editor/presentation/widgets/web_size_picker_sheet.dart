@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:denis_phote_world/core/theme/app_colors.dart';
-import 'package:denis_phote_world/domain/entities/editor_models.dart';
+import 'package:photokids_studio/core/theme/app_colors.dart';
+import 'package:photokids_studio/domain/entities/editor_models.dart';
 
 class WebSizePickerSheet extends StatefulWidget {
   final WebPhotoPreset? currentPreset;

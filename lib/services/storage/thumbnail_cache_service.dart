@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:denis_phote_world/services/image/image_processing_service.dart';
+import 'package:photokids_studio/services/image/image_processing_service.dart';
 
 /// Memory and Disk thumbnail cache to ensure smooth 60fps scrolling
 /// with 10.000+ pictures in the gallery.

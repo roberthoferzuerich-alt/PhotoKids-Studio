@@ -1,16 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:denis_phote_world/data/datasources/album_local_datasource.dart';
-import 'package:denis_phote_world/data/datasources/photo_local_datasource.dart';
-import 'package:denis_phote_world/data/datasources/preferences_datasource.dart';
-import 'package:denis_phote_world/data/repositories/album_repository_impl.dart';
-import 'package:denis_phote_world/data/repositories/photo_repository_impl.dart';
-import 'package:denis_phote_world/data/repositories/settings_repository_impl.dart';
-import 'package:denis_phote_world/domain/repositories/i_album_repository.dart';
-import 'package:denis_phote_world/domain/repositories/i_photo_repository.dart';
-import 'package:denis_phote_world/domain/repositories/i_settings_repository.dart';
-import 'package:denis_phote_world/services/cloud/cloud_sync_service.dart';
-import 'package:denis_phote_world/services/ai/ai_vision_service.dart';
-import 'package:denis_phote_world/services/storage/thumbnail_cache_service.dart';
+import 'package:photokids_studio/data/datasources/album_local_datasource.dart';
+import 'package:photokids_studio/data/datasources/photo_local_datasource.dart';
+import 'package:photokids_studio/data/datasources/preferences_datasource.dart';
+import 'package:photokids_studio/data/repositories/album_repository_impl.dart';
+import 'package:photokids_studio/data/repositories/photo_repository_impl.dart';
+import 'package:photokids_studio/data/repositories/settings_repository_impl.dart';
+import 'package:photokids_studio/domain/repositories/i_album_repository.dart';
+import 'package:photokids_studio/domain/repositories/i_photo_repository.dart';
+import 'package:photokids_studio/domain/repositories/i_settings_repository.dart';
+import 'package:photokids_studio/services/cloud/cloud_sync_service.dart';
+import 'package:photokids_studio/services/ai/ai_vision_service.dart';
+import 'package:photokids_studio/services/storage/thumbnail_cache_service.dart';
 
 // Datasources
 final photoDatasourceProvider = Provider<PhotoLocalDatasource>((ref) {

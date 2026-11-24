@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
-import 'package:denis_phote_world/domain/repositories/i_photo_repository.dart';
-import 'package:denis_phote_world/features/gallery/presentation/controllers/gallery_controller.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/domain/repositories/i_photo_repository.dart';
+import 'package:photokids_studio/features/gallery/presentation/controllers/gallery_controller.dart';
 
 class MockPhotoRepository implements IPhotoRepository {
   final List<PhotoEntity> photos;

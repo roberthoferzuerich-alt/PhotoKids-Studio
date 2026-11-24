@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:denis_phote_world/domain/entities/editor_models.dart';
+import 'package:photokids_studio/domain/entities/editor_models.dart';
 
 class PhotoFramePainter extends CustomPainter {
   final PhotoFrameType frameType;

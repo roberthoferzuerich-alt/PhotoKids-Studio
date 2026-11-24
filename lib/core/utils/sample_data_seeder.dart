@@ -5,10 +5,10 @@ import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:denis_phote_world/domain/entities/album_entity.dart';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
-import 'package:denis_phote_world/domain/repositories/i_album_repository.dart';
-import 'package:denis_phote_world/domain/repositories/i_photo_repository.dart';
+import 'package:photokids_studio/domain/entities/album_entity.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/domain/repositories/i_album_repository.dart';
+import 'package:photokids_studio/domain/repositories/i_photo_repository.dart';
 
 class SampleDataSeeder {
   static Future<void> seedInitialDataIfNeeded(

@@ -1,5 +1,5 @@
-import 'package:denis_phote_world/data/datasources/preferences_datasource.dart';
-import 'package:denis_phote_world/domain/repositories/i_settings_repository.dart';
+import 'package:photokids_studio/data/datasources/preferences_datasource.dart';
+import 'package:photokids_studio/domain/repositories/i_settings_repository.dart';
 
 class SettingsRepositoryImpl implements ISettingsRepository {
   final PreferencesDatasource _datasource;

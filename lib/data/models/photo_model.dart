@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
 
 class PhotoModel {
   final String id;

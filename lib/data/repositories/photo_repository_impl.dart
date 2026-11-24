@@ -1,7 +1,7 @@
-import 'package:denis_phote_world/data/datasources/photo_local_datasource.dart';
-import 'package:denis_phote_world/data/models/photo_model.dart';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
-import 'package:denis_phote_world/domain/repositories/i_photo_repository.dart';
+import 'package:photokids_studio/data/datasources/photo_local_datasource.dart';
+import 'package:photokids_studio/data/models/photo_model.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/domain/repositories/i_photo_repository.dart';
 
 class PhotoRepositoryImpl implements IPhotoRepository {
   final PhotoLocalDatasource _datasource;

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:denis_phote_world/core/theme/app_colors.dart';
+import 'package:photokids_studio/core/theme/app_colors.dart';
+import 'package:photokids_studio/shared/widgets/install_app_dialog.dart';
 
 class AboutMeScreen extends StatelessWidget {
   const AboutMeScreen({super.key});
@@ -351,6 +352,21 @@ class AboutMeScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.turquoiseSecondary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                ),
+                icon: const Icon(Icons.install_mobile_rounded, size: 22),
+                label: const Text('App aufs Smartphone laden 📲', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                onPressed: () => InstallAppDialog.show(context),
+              ),
             ),
             const SizedBox(height: 24),
 

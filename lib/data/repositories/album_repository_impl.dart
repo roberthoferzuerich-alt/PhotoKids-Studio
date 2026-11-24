@@ -1,7 +1,7 @@
-import 'package:denis_phote_world/data/datasources/album_local_datasource.dart';
-import 'package:denis_phote_world/data/models/album_model.dart';
-import 'package:denis_phote_world/domain/entities/album_entity.dart';
-import 'package:denis_phote_world/domain/repositories/i_album_repository.dart';
+import 'package:photokids_studio/data/datasources/album_local_datasource.dart';
+import 'package:photokids_studio/data/models/album_model.dart';
+import 'package:photokids_studio/domain/entities/album_entity.dart';
+import 'package:photokids_studio/domain/repositories/i_album_repository.dart';
 
 class AlbumRepositoryImpl implements IAlbumRepository {
   final AlbumLocalDatasource _datasource;

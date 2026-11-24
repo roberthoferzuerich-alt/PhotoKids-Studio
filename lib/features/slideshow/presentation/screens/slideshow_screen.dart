@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:denis_phote_world/core/theme/app_colors.dart';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
-import 'package:denis_phote_world/features/gallery/presentation/controllers/gallery_controller.dart';
-import 'package:denis_phote_world/features/settings/presentation/controllers/settings_controller.dart';
+import 'package:photokids_studio/core/theme/app_colors.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/features/gallery/presentation/controllers/gallery_controller.dart';
+import 'package:photokids_studio/features/settings/presentation/controllers/settings_controller.dart';
 
 class SlideshowScreen extends ConsumerStatefulWidget {
   const SlideshowScreen({super.key});

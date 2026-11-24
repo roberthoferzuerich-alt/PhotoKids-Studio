@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:denis_phote_world/core/constants/app_constants.dart';
-import 'package:denis_phote_world/core/theme/app_colors.dart';
-import 'package:denis_phote_world/domain/entities/editor_models.dart';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
-import 'package:denis_phote_world/features/editor/presentation/controllers/editor_controller.dart';
-import 'package:denis_phote_world/features/editor/presentation/widgets/greeting_card_modal.dart';
-import 'package:denis_phote_world/features/editor/presentation/widgets/photo_frame_painter.dart';
-import 'package:denis_phote_world/features/editor/presentation/widgets/web_size_picker_sheet.dart';
-import 'package:denis_phote_world/features/gallery/presentation/controllers/gallery_controller.dart';
-import 'package:denis_phote_world/shared/widgets/before_after_slider.dart';
-import 'package:denis_phote_world/shared/widgets/confetti_celebration.dart';
+import 'package:photokids_studio/core/constants/app_constants.dart';
+import 'package:photokids_studio/core/theme/app_colors.dart';
+import 'package:photokids_studio/domain/entities/editor_models.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/features/editor/presentation/controllers/editor_controller.dart';
+import 'package:photokids_studio/features/editor/presentation/widgets/greeting_card_modal.dart';
+import 'package:photokids_studio/features/editor/presentation/widgets/photo_frame_painter.dart';
+import 'package:photokids_studio/features/editor/presentation/widgets/web_size_picker_sheet.dart';
+import 'package:photokids_studio/features/gallery/presentation/controllers/gallery_controller.dart';
+import 'package:photokids_studio/shared/widgets/before_after_slider.dart';
+import 'package:photokids_studio/shared/widgets/confetti_celebration.dart';
 
 class EditorScreen extends ConsumerStatefulWidget {
   final PhotoEntity? photo;

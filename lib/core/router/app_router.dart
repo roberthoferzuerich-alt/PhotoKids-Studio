@@ -1,14 +1,14 @@
 import 'package:go_router/go_router.dart';
-import 'package:denis_phote_world/domain/entities/photo_entity.dart';
-import 'package:denis_phote_world/features/albums/presentation/screens/albums_screen.dart';
-import 'package:denis_phote_world/features/cloud/presentation/screens/cloud_screen.dart';
-import 'package:denis_phote_world/features/editor/presentation/screens/editor_screen.dart';
-import 'package:denis_phote_world/features/gallery/presentation/screens/gallery_screen.dart';
-import 'package:denis_phote_world/features/settings/presentation/screens/about_me.dart';
-import 'package:denis_phote_world/features/settings/presentation/screens/settings_screen.dart';
-import 'package:denis_phote_world/features/slideshow/presentation/screens/slideshow_screen.dart';
-import 'package:denis_phote_world/features/viewer/presentation/screens/viewer_screen.dart';
-import 'package:denis_phote_world/shared/widgets/main_navigation_shell.dart';
+import 'package:photokids_studio/domain/entities/photo_entity.dart';
+import 'package:photokids_studio/features/albums/presentation/screens/albums_screen.dart';
+import 'package:photokids_studio/features/cloud/presentation/screens/cloud_screen.dart';
+import 'package:photokids_studio/features/editor/presentation/screens/editor_screen.dart';
+import 'package:photokids_studio/features/gallery/presentation/screens/gallery_screen.dart';
+import 'package:photokids_studio/features/settings/presentation/screens/about_me.dart';
+import 'package:photokids_studio/features/settings/presentation/screens/settings_screen.dart';
+import 'package:photokids_studio/features/slideshow/presentation/screens/slideshow_screen.dart';
+import 'package:photokids_studio/features/viewer/presentation/screens/viewer_screen.dart';
+import 'package:photokids_studio/shared/widgets/main_navigation_shell.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',

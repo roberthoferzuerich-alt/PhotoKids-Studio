@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:denis_phote_world/shared/widgets/kid_button.dart';
+import 'package:photokids_studio/shared/widgets/kid_button.dart';
 
 void main() {
   group('KidButton Widget Tests', () {
