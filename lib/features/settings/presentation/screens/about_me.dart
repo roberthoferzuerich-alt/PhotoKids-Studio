@@ -381,10 +381,10 @@ class AboutMeScreen extends StatelessWidget {
                 icon: const Icon(Icons.auto_awesome_rounded, size: 22),
                 label: const Text('Alle 16 Repositories im Web ansehen 🚀', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14)),
                 onPressed: () {
-                  Clipboard.setData(const ClipboardData(text: 'https://roberthoferzuerich-alt.github.io/PhotoKids-Studio/repositories.html'));
+                  Clipboard.setData(const ClipboardData(text: 'https://roberthoferzuerich-alt.github.io/portfolio/'));
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('🌐 Link zum Repositories-Showcase kopiert! (https://roberthoferzuerich-alt.github.io/PhotoKids-Studio/repositories.html)'),
+                      content: Text('🌐 Link zum neuen Portfolio kopiert! (https://roberthoferzuerich-alt.github.io/portfolio/)'),
                       backgroundColor: AppColors.pinkPrimary,
                       duration: Duration(seconds: 3),
                     ),
