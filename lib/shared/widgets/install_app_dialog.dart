@@ -6,7 +6,8 @@ class InstallAppDialog extends StatefulWidget {
   const InstallAppDialog({super.key});
 
   static const String appUrl = 'https://roberthoferzuerich-alt.github.io/PhotoKids-Studio/';
-  static const String apkReleasesUrl = 'https://github.com/roberthoferzuerich-alt/PhotoKids-Studio/releases';
+  static const String apkReleasesUrl = 'https://github.com/roberthoferzuerich-alt/PhotoKids-Studio/releases/tag/v1.0.0';
+  static const String directApkUrl = 'https://github.com/roberthoferzuerich-alt/PhotoKids-Studio/releases/download/v1.0.0/PhotoKids-Studio-v1.0.0.apk';
 
   static Future<void> show(BuildContext context) {
     return showDialog(
@@ -22,6 +23,7 @@ class InstallAppDialog extends StatefulWidget {
 
 class _InstallAppDialogState extends State<InstallAppDialog> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  int _selectedQrMode = 0; // 0: Web-App, 1: APK-Download
 
   @override
   void initState() {
@@ -254,11 +256,11 @@ class _InstallAppDialogState extends State<InstallAppDialog> with SingleTickerPr
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'PhotoKids-Studio.apk',
+                        'PhotoKids-Studio-v1.0.0.apk',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                       ),
                       Text(
-                        'Direkter Download über GitHub Releases',
+                        'Direkter APK-Download (v1.0.0, 62.8 MB)',
                         style: TextStyle(fontSize: 12, color: isDark ? Colors.white60 : Colors.black54),
                       ),
                     ],
@@ -272,12 +274,12 @@ class _InstallAppDialogState extends State<InstallAppDialog> with SingleTickerPr
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                   icon: const Icon(Icons.download_rounded, size: 18),
-                  label: const Text('Releases', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                  label: const Text('APK Link', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                   onPressed: () {
-                    Clipboard.setData(const ClipboardData(text: InstallAppDialog.apkReleasesUrl));
+                    Clipboard.setData(const ClipboardData(text: InstallAppDialog.directApkUrl));
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('📋 GitHub Releases Link kopiert!'),
+                        content: Text('📥 Direkter APK-Download-Link kopiert!'),
                         backgroundColor: AppColors.turquoiseDark,
                       ),
                     );
@@ -337,75 +339,136 @@ class _InstallAppDialogState extends State<InstallAppDialog> with SingleTickerPr
   }
 
   Widget _buildQrCodeTab(BuildContext context, bool isDark) {
-    const qrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https%3A%2F%2Froberthoferzuerich-alt.github.io%2FPhotoKids-Studio%2F';
+    final targetUrl = _selectedQrMode == 0 ? InstallAppDialog.appUrl : InstallAppDialog.directApkUrl;
+    final qrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${Uri.encodeComponent(targetUrl)}';
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(18),
       child: Column(
         children: [
-          const SizedBox(height: 8),
+          // Mode Toggle
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1B1426) : const Color(0xFFEEEBF3),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () => setState(() => _selectedQrMode = 0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: _selectedQrMode == 0 ? AppColors.pinkPrimary : Colors.transparent,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: _selectedQrMode == 0
+                          ? [BoxShadow(color: AppColors.pinkPrimary.withValues(alpha: 0.3), blurRadius: 6)]
+                          : null,
+                    ),
+                    child: Text(
+                      '🌐 Web-App',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: _selectedQrMode == 0 ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => setState(() => _selectedQrMode = 1),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: _selectedQrMode == 1 ? AppColors.turquoiseSecondary : Colors.transparent,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: _selectedQrMode == 1
+                          ? [BoxShadow(color: AppColors.turquoiseSecondary.withValues(alpha: 0.3), blurRadius: 6)]
+                          : null,
+                    ),
+                    child: Text(
+                      '🤖 APK Download',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: _selectedQrMode == 1 ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+
           Text(
-            'Mit dem Handy scannen 📸',
+            _selectedQrMode == 0 ? 'Web-App am Handy öffnen 🌐' : 'Direkter APK-Download aufs Handy 📥',
             style: TextStyle(
-              fontSize: 17,
+              fontSize: 16,
               fontWeight: FontWeight.w800,
               color: isDark ? Colors.white : Colors.black87,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           Text(
-            'Öffne die Kamera deines Smartphones (iPhone oder Android) und halte sie auf den QR-Code:',
+            _selectedQrMode == 0
+                ? 'Halte die Kamera auf den QR-Code, um die Web-App direkt im Browser zu öffnen:'
+                : 'Scanne den QR-Code, um PhotoKids-Studio-v1.0.0.apk (62.8 MB) direkt herunterzuladen:',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13, color: isDark ? Colors.white70 : Colors.black54),
+            style: TextStyle(fontSize: 12, color: isDark ? Colors.white70 : Colors.black54),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 14),
 
           // QR Code Card
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.1),
-                  blurRadius: 18,
-                  offset: const Offset(0, 6),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
               child: Image.network(
                 qrImageUrl,
-                width: 200,
-                height: 200,
+                width: 180,
+                height: 180,
                 fit: BoxFit.contain,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
                   return Container(
-                    width: 200,
-                    height: 200,
+                    width: 180,
+                    height: 180,
                     color: Colors.white,
                     child: const Center(child: CircularProgressIndicator()),
                   );
                 },
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    width: 200,
-                    height: 200,
+                    width: 180,
+                    height: 180,
                     color: const Color(0xFFF7F5F9),
                     padding: const EdgeInsets.all(12),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(Icons.qr_code_2_rounded, size: 48, color: AppColors.pinkPrimary),
-                          SizedBox(height: 8),
+                        children: [
+                          const Icon(Icons.qr_code_2_rounded, size: 44, color: AppColors.pinkPrimary),
+                          const SizedBox(height: 6),
                           Text(
-                            'https://roberthoferzuerich-alt.github.io/PhotoKids-Studio/',
+                            targetUrl,
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.black87),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black87),
                           ),
                         ],
                       ),
@@ -415,25 +478,43 @@ class _InstallAppDialogState extends State<InstallAppDialog> with SingleTickerPr
               ),
             ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 14),
 
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF2C243B) : const Color(0xFFFFF0F5),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.pinkPrimary.withValues(alpha: 0.3)),
-            ),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('✨', style: TextStyle(fontSize: 16)),
-                SizedBox(width: 8),
-                Text(
-                  'Automatische Weiterleitung zu PhotoKids Studio',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+          InkWell(
+            onTap: () {
+              Clipboard.setData(ClipboardData(text: targetUrl));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(_selectedQrMode == 0 ? '📋 Web-App Link kopiert!' : '📥 APK-Download-Link kopiert!'),
+                  backgroundColor: AppColors.turquoiseDark,
                 ),
-              ],
+              );
+            },
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF2C243B) : const Color(0xFFFFF0F5),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: (_selectedQrMode == 0 ? AppColors.pinkPrimary : AppColors.turquoiseSecondary).withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    _selectedQrMode == 0 ? Icons.open_in_browser_rounded : Icons.file_download_outlined,
+                    size: 16,
+                    color: _selectedQrMode == 0 ? AppColors.pinkPrimary : AppColors.turquoiseSecondary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    _selectedQrMode == 0 ? 'Kopiere: WebApp Link' : 'Kopiere: Direkter APK-Link',
+                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
