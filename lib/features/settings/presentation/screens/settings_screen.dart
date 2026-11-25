@@ -299,7 +299,7 @@ class SettingsScreen extends ConsumerWidget {
             child: Column(
               children: [
                 Text(
-                  'PhotoKids Studio v1.1.0',
+                  'PhotoKids Studio v1.0.1',
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
                 ),
                 SizedBox(height: 4),

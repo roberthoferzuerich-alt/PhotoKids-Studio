@@ -397,7 +397,7 @@ class AboutMeScreen extends StatelessWidget {
             // Footer
             Center(
               child: Text(
-                'PhotoKids Studio v1.1.0 • Zürich 🇨🇭\nEntwickelt mit Liebe für Denis & die ganze Familie',
+                'PhotoKids Studio v1.0.1 • Zürich 🇨🇭\nEntwickelt mit Liebe für Denis & die ganze Familie',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 12,
