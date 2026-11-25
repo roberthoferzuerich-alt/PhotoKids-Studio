@@ -28,6 +28,22 @@ class EditorScreen extends ConsumerStatefulWidget {
 class _EditorScreenState extends ConsumerState<EditorScreen> {
   List<Offset> _currentPoints = [];
   bool _isCelebrating = false;
+  late final TextEditingController _speechBubbleTextController;
+  late final FocusNode _speechBubbleFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _speechBubbleTextController = TextEditingController();
+    _speechBubbleFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _speechBubbleTextController.dispose();
+    _speechBubbleFocusNode.dispose();
+    super.dispose();
+  }
 
   void _savePhoto() async {
     HapticFeedback.mediumImpact();
@@ -103,9 +119,11 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
 
     final editorState = ref.watch(editorControllerProvider(photo));
     final editorNotifier = ref.read(editorControllerProvider(photo).notifier);
+    final isKeyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
 
     return Scaffold(
       backgroundColor: Colors.black,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
@@ -198,8 +216,8 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
         onFinished: () => setState(() => _isCelebrating = false),
         child: Column(
           children: [
-            // Active Web Preset Indicator Badge
-            if (editorState.targetWidth != null && editorState.targetHeight != null)
+            // Active Web Preset Indicator Badge (hidden while typing to maximize space)
+            if (editorState.targetWidth != null && editorState.targetHeight != null && !isKeyboardOpen)
               Container(
                 margin: const EdgeInsets.only(top: 4, bottom: 2),
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
@@ -259,23 +277,26 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        color: const Color(0xFF1E1C24),
-        child: SafeArea(
-          top: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Sub-Toolbar panel for the active tool
-              _buildActiveToolPanel(editorState, editorNotifier),
 
-              // Bottom Primary Toolbar
-              _buildPrimaryToolbar(editorState, editorNotifier),
-            ],
-          ),
+            // Bottom Bar directly inside body Column (resizes automatically above software keyboard)
+            Container(
+              color: const Color(0xFF1E1C24),
+              child: SafeArea(
+                top: false,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Sub-Toolbar panel for the active tool
+                    _buildActiveToolPanel(editorState, editorNotifier),
+
+                    // Bottom Primary Toolbar (hidden while typing to give maximum canvas height)
+                    if (!isKeyboardOpen)
+                      _buildPrimaryToolbar(editorState, editorNotifier),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -833,7 +854,6 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
   }
 
   Widget _buildTextOptions(EditorNotifier notifier) {
-    final textController = TextEditingController();
     final quickBubbles = [
       'BÄM! 💥',
       'Hallo! 👋',
@@ -843,6 +863,16 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
       'Superstar! ⭐',
       'Hurra! 🎉',
     ];
+
+    void submitBubble() {
+      final text = _speechBubbleTextController.text.trim();
+      if (text.isNotEmpty) {
+        HapticFeedback.lightImpact();
+        notifier.addSpeechBubble(text, SpeechBubbleType.comic);
+        _speechBubbleTextController.clear();
+        _speechBubbleFocusNode.unfocus();
+      }
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -867,6 +897,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
                   onPressed: () {
                     HapticFeedback.lightImpact();
                     notifier.addSpeechBubble(phrase, SpeechBubbleType.comic);
+                    _speechBubbleFocusNode.unfocus();
                   },
                 ),
               );
@@ -880,14 +911,28 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           children: [
             Expanded(
               child: TextField(
-                controller: textController,
+                controller: _speechBubbleTextController,
+                focusNode: _speechBubbleFocusNode,
                 style: const TextStyle(color: Colors.white),
+                textInputAction: TextInputAction.send,
+                onSubmitted: (_) => submitBubble(),
                 decoration: InputDecoration(
                   hintText: 'Eigenen Text oder Sprechblase...',
                   hintStyle: const TextStyle(color: Colors.white54),
                   filled: true,
                   fillColor: Colors.black26,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                  suffixIcon: ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: _speechBubbleTextController,
+                    builder: (context, value, _) {
+                      if (value.text.isEmpty) return const SizedBox.shrink();
+                      return IconButton(
+                        icon: const Icon(Icons.clear_rounded, size: 18, color: Colors.white54),
+                        onPressed: () => _speechBubbleTextController.clear(),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -895,15 +940,11 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.pinkPrimary,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              onPressed: () {
-                if (textController.text.trim().isNotEmpty) {
-                  notifier.addSpeechBubble(textController.text.trim(), SpeechBubbleType.comic);
-                  textController.clear();
-                }
-              },
-              child: const Text('💬 Blase', style: TextStyle(color: Colors.white)),
+              onPressed: submitBubble,
+              child: const Text('💬 Blase', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
