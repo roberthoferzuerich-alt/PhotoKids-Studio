@@ -7,7 +7,7 @@ class InstallAppDialog extends StatefulWidget {
 
   static const String appUrl = 'https://roberthoferzuerich-alt.github.io/PhotoKids-Studio/';
   static const String apkReleasesUrl = 'https://github.com/roberthoferzuerich-alt/PhotoKids-Studio/releases/tag/v1.0.1';
-  static const String directApkUrl = 'https://github.com/roberthoferzuerich-alt/PhotoKids-Studio/releases/download/v1.0.1/PhotoKids-Studio-v1.0.1.apk';
+  static const String directApkUrl = 'https://github.com/roberthoferzuerich-alt/PhotoKids-Studio/releases/download/v1.0.1/app-release.apk';
 
   static Future<void> show(BuildContext context) {
     return showDialog(
