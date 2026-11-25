@@ -6,8 +6,8 @@ class InstallAppDialog extends StatefulWidget {
   const InstallAppDialog({super.key});
 
   static const String appUrl = 'https://roberthoferzuerich-alt.github.io/PhotoKids-Studio/';
-  static const String apkReleasesUrl = 'https://github.com/roberthoferzuerich-alt/PhotoKids-Studio/releases/tag/v1.0.0';
-  static const String directApkUrl = 'https://github.com/roberthoferzuerich-alt/PhotoKids-Studio/releases/download/v1.0.0/PhotoKids-Studio-v1.0.0.apk';
+  static const String apkReleasesUrl = 'https://github.com/roberthoferzuerich-alt/PhotoKids-Studio/releases/tag/v1.0.1';
+  static const String directApkUrl = 'https://github.com/roberthoferzuerich-alt/PhotoKids-Studio/releases/download/v1.0.1/PhotoKids-Studio-v1.0.1.apk';
 
   static Future<void> show(BuildContext context) {
     return showDialog(
@@ -256,11 +256,11 @@ class _InstallAppDialogState extends State<InstallAppDialog> with SingleTickerPr
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'PhotoKids-Studio-v1.0.0.apk',
+                        'PhotoKids-Studio-v1.0.1.apk',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                       ),
                       Text(
-                        'Direkter APK-Download (v1.0.0, 62.8 MB)',
+                        'Direkter APK-Download (v1.0.1, 62.8 MB)',
                         style: TextStyle(fontSize: 12, color: isDark ? Colors.white60 : Colors.black54),
                       ),
                     ],
