@@ -107,6 +107,185 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     );
   }
 
+  List<Widget> _buildAppBarActions(
+    BuildContext context,
+    PhotoEntity photo,
+    EditorState editorState,
+    EditorNotifier editorNotifier,
+    bool isNarrow,
+  ) {
+    if (isNarrow) {
+      // Narrow Mobile Layout (< 540px)
+      return [
+        // Undo
+        IconButton(
+          icon: const Icon(Icons.undo_rounded, size: 20),
+          visualDensity: VisualDensity.compact,
+          tooltip: 'Rückgängig',
+          onPressed: editorState.strokes.isNotEmpty
+              ? () {
+                  HapticFeedback.lightImpact();
+                  editorNotifier.undoStroke();
+                }
+              : null,
+        ),
+        // Redo
+        IconButton(
+          icon: const Icon(Icons.redo_rounded, size: 20),
+          visualDensity: VisualDensity.compact,
+          tooltip: 'Wiederholen',
+          onPressed: editorState.undoneStrokes.isNotEmpty
+              ? () {
+                  HapticFeedback.lightImpact();
+                  editorNotifier.redoStroke();
+                }
+              : null,
+        ),
+        // More Tools Menu (Card, Compare, Web-Preset)
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.more_vert_rounded, size: 22),
+          tooltip: 'Weitere Werkzeuge',
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'card',
+              child: Row(
+                children: [
+                  Icon(Icons.mail_rounded, color: AppColors.pinkPrimary, size: 20),
+                  SizedBox(width: 10),
+                  Text('Als Grußkarte 💌', style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: 'compare',
+              child: Row(
+                children: [
+                  Icon(Icons.compare_rounded, color: AppColors.yellowAccent, size: 20),
+                  SizedBox(width: 10),
+                  Text(
+                    editorState.showBeforeAfterComparison ? 'Vergleich beenden ↔️' : 'Vorher / Nachher ↔️',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'web',
+              child: Row(
+                children: [
+                  Icon(Icons.public_rounded, color: AppColors.turquoiseSecondary, size: 20),
+                  SizedBox(width: 10),
+                  Text('Web-Größe Presets 🌐', style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+          ],
+          onSelected: (val) {
+            if (val == 'card') GreetingCardModal.show(context, photo: photo);
+            if (val == 'compare') {
+              HapticFeedback.selectionClick();
+              editorNotifier.toggleBeforeAfter();
+            }
+            if (val == 'web') _openWebSizePicker(context, editorState, editorNotifier);
+          },
+        ),
+        // Compact Save Button
+        Padding(
+          padding: const EdgeInsets.only(left: 4, right: 8),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.pinkPrimary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              minimumSize: const Size(36, 36),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            ),
+            onPressed: editorState.isSaving ? null : _savePhoto,
+            child: editorState.isSaving
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                  )
+                : const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.check_rounded, size: 18),
+                      SizedBox(width: 4),
+                      Text('Speichern', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12)),
+                    ],
+                  ),
+          ),
+        ),
+      ];
+    }
+
+    // Wide Layout (Tablets, Desktop, Web on PC >= 540px)
+    return [
+      IconButton(
+        icon: const Icon(Icons.mail_rounded, color: AppColors.pinkPrimary),
+        tooltip: 'Als Grußkarte gestalten 💌',
+        onPressed: () => GreetingCardModal.show(context, photo: photo),
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.compare_rounded,
+          color: editorState.showBeforeAfterComparison ? AppColors.yellowAccent : Colors.white70,
+        ),
+        tooltip: 'Vorher / Nachher Vergleich ↔️',
+        onPressed: () {
+          HapticFeedback.selectionClick();
+          editorNotifier.toggleBeforeAfter();
+        },
+      ),
+      IconButton(
+        icon: const Icon(Icons.public_rounded, color: AppColors.turquoiseSecondary),
+        tooltip: 'Web-Größe & Social Media Presets',
+        onPressed: () => _openWebSizePicker(context, editorState, editorNotifier),
+      ),
+      IconButton(
+        icon: const Icon(Icons.undo_rounded, size: 22),
+        tooltip: 'Rückgängig',
+        onPressed: editorState.strokes.isNotEmpty
+            ? () {
+                HapticFeedback.lightImpact();
+                editorNotifier.undoStroke();
+              }
+            : null,
+      ),
+      IconButton(
+        icon: const Icon(Icons.redo_rounded, size: 22),
+        tooltip: 'Wiederholen',
+        onPressed: editorState.undoneStrokes.isNotEmpty
+            ? () {
+                HapticFeedback.lightImpact();
+                editorNotifier.redoStroke();
+              }
+            : null,
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.pinkPrimary,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          ),
+          icon: editorState.isSaving
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                )
+              : const Icon(Icons.check_rounded, size: 18),
+          label: const Text('Speichern', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+          onPressed: editorState.isSaving ? null : _savePhoto,
+        ),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final photo = widget.photo;
@@ -120,6 +299,8 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     final editorState = ref.watch(editorControllerProvider(photo));
     final editorNotifier = ref.read(editorControllerProvider(photo).notifier);
     final isKeyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isNarrow = screenWidth < 540;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -128,9 +309,9 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         titleSpacing: 0,
-        title: const Text(
-          'Studio Editor 🎨',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
+        title: Text(
+          isNarrow ? 'Studio 🎨' : 'Studio Editor 🎨',
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: isNarrow ? 15 : 17),
         ),
         leading: IconButton(
           icon: const Icon(Icons.close_rounded),
@@ -142,74 +323,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
             }
           },
         ),
-        actions: [
-          // Greeting Card Quick Trigger
-          IconButton(
-            icon: const Icon(Icons.mail_rounded, color: AppColors.pinkPrimary),
-            tooltip: 'Als Grußkarte gestalten 💌',
-            onPressed: () => GreetingCardModal.show(context, photo: photo),
-          ),
-          // Before / After Split Slider Toggle
-          IconButton(
-            icon: Icon(
-              Icons.compare_rounded,
-              color: editorState.showBeforeAfterComparison ? AppColors.yellowAccent : Colors.white70,
-            ),
-            tooltip: 'Vorher / Nachher Vergleich ↔️',
-            onPressed: () {
-              HapticFeedback.selectionClick();
-              editorNotifier.toggleBeforeAfter();
-            },
-          ),
-          // Web-Size Quick Action Icon
-          IconButton(
-            icon: const Icon(Icons.public_rounded, color: AppColors.turquoiseSecondary),
-            tooltip: 'Web-Größe & Social Media Presets',
-            onPressed: () => _openWebSizePicker(context, editorState, editorNotifier),
-          ),
-          // Undo & Redo
-          IconButton(
-            icon: const Icon(Icons.undo_rounded, size: 22),
-            tooltip: 'Rückgängig',
-            onPressed: editorState.strokes.isNotEmpty
-                ? () {
-                    HapticFeedback.lightImpact();
-                    editorNotifier.undoStroke();
-                  }
-                : null,
-          ),
-          IconButton(
-            icon: const Icon(Icons.redo_rounded, size: 22),
-            tooltip: 'Wiederholen',
-            onPressed: editorState.undoneStrokes.isNotEmpty
-                ? () {
-                    HapticFeedback.lightImpact();
-                    editorNotifier.redoStroke();
-                  }
-                : null,
-          ),
-          // Save Button
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.pinkPrimary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              ),
-              icon: editorState.isSaving
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                    )
-                  : const Icon(Icons.check_rounded, size: 18),
-              label: const Text('Speichern', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
-              onPressed: editorState.isSaving ? null : _savePhoto,
-            ),
-          ),
-        ],
+        actions: _buildAppBarActions(context, photo, editorState, editorNotifier, isNarrow),
       ),
       body: ConfettiCelebration(
         isPlaying: _isCelebrating,
