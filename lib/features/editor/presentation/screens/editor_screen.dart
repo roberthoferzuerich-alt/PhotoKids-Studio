@@ -749,7 +749,17 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
             child: ChoiceChip(
               label: Text(ratio.label),
               selected: isSelected,
+              backgroundColor: const Color(0xFF3A3446),
               selectedColor: AppColors.pinkPrimary,
+              side: BorderSide(
+                color: isSelected ? Colors.white : Colors.white24,
+                width: isSelected ? 1.5 : 1.0,
+              ),
+              labelStyle: TextStyle(
+                color: Colors.white,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                fontSize: 13,
+              ),
               onSelected: (_) => notifier.setCropRatio(ratio),
             ),
           );
@@ -842,12 +852,26 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     required VoidCallback onTap,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: ChoiceChip(
-        avatar: Icon(icon, size: 18),
+        avatar: Icon(
+          icon,
+          size: 18,
+          color: isSelected ? Colors.white : Colors.white70,
+        ),
         label: Text(label),
         selected: isSelected,
+        backgroundColor: const Color(0xFF3A3446),
         selectedColor: AppColors.pinkPrimary,
+        side: BorderSide(
+          color: isSelected ? Colors.white : Colors.white24,
+          width: isSelected ? 1.5 : 1.0,
+        ),
+        labelStyle: TextStyle(
+          color: Colors.white,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+          fontSize: 13,
+        ),
         onSelected: (_) => onTap(),
       ),
     );
@@ -1003,15 +1027,27 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
               (p == 'Malbuch 🖍️' && state.activeFilterPreset == 'coloring') ||
               (p == 'Original' && state.activeFilterPreset == null);
 
+          final isMalbuch = p == 'Malbuch 🖍️';
+          final selectedBg = isMalbuch ? AppColors.yellowAccent : AppColors.purpleAccent;
+          final textColor = isSelected
+              ? (isMalbuch ? Colors.black87 : Colors.white)
+              : Colors.white;
+
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 5),
             child: ChoiceChip(
               label: Text(p),
               selected: isSelected,
-              selectedColor: p == 'Malbuch 🖍️' ? AppColors.yellowAccent : AppColors.purpleAccent,
+              backgroundColor: const Color(0xFF3A3446),
+              selectedColor: selectedBg,
+              side: BorderSide(
+                color: isSelected ? Colors.white : Colors.white24,
+                width: isSelected ? 1.5 : 1.0,
+              ),
               labelStyle: TextStyle(
-                color: isSelected && p == 'Malbuch 🖍️' ? Colors.black87 : Colors.white,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                color: textColor,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                fontSize: 13,
               ),
               onSelected: (_) {
                 HapticFeedback.selectionClick();
