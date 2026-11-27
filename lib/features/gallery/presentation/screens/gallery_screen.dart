@@ -6,11 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:photokids_studio/core/constants/app_constants.dart';
 import 'package:photokids_studio/core/theme/app_colors.dart';
 import 'package:photokids_studio/domain/entities/photo_entity.dart';
 import 'package:photokids_studio/features/gallery/presentation/controllers/gallery_controller.dart';
+import 'package:photokids_studio/features/gallery/presentation/widgets/ai_magic_generator_dialog.dart';
 import 'package:photokids_studio/features/settings/presentation/controllers/settings_controller.dart';
 import 'package:photokids_studio/shared/widgets/install_app_dialog.dart';
 import 'package:photokids_studio/shared/widgets/kid_button.dart';
@@ -35,34 +37,56 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
   Future<void> _pickAndImportImages() async {
     try {
       final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: AppConstants.supportedExtensions,
+        type: FileType.image,
         allowMultiple: true,
       );
 
       if (result != null && result.files.isNotEmpty) {
         final galleryNotifier = ref.read(galleryControllerProvider.notifier);
+        final docsDir = await getApplicationDocumentsDirectory();
+        final photosDir = Directory(p.join(docsDir.path, 'imported_photos'));
+        if (!await photosDir.exists()) {
+          await photosDir.create(recursive: true);
+        }
+
+        int count = 0;
         for (final file in result.files) {
           if (file.path != null) {
             final f = File(file.path!);
-            final bytes = await f.length();
-            final ext = p.extension(file.path!).replaceAll('.', '').toLowerCase();
+            if (await f.exists()) {
+              final bytes = await f.length();
+              final ext = p.extension(file.path!).replaceAll('.', '').toLowerCase();
 
-            final photo = PhotoEntity(
-              id: const Uuid().v4(),
-              filePath: file.path!,
-              fileName: file.name,
-              fileExtension: ext,
-              fileSizeBytes: bytes,
-              width: 1920,
-              height: 1080,
-              dateTaken: DateTime.now(),
-              dateAdded: DateTime.now(),
-              category: 'Importiert 📷',
-              tags: ['kamera', 'spaß'],
-            );
-            await galleryNotifier.saveNewPhoto(photo);
+              // Safe permanent copy in app documents directory
+              final permanentPath = p.join(photosDir.path, '${const Uuid().v4()}_${file.name}');
+              await f.copy(permanentPath);
+
+              final photo = PhotoEntity(
+                id: const Uuid().v4(),
+                filePath: permanentPath,
+                fileName: file.name,
+                fileExtension: ext.isEmpty ? 'jpg' : ext,
+                fileSizeBytes: bytes,
+                width: 1920,
+                height: 1080,
+                dateTaken: DateTime.now(),
+                dateAdded: DateTime.now(),
+                category: 'Importiert 📷',
+                tags: ['kamera', 'spaß'],
+              );
+              await galleryNotifier.saveNewPhoto(photo);
+              count++;
+            }
           }
+        }
+
+        if (mounted && count > 0) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('$count Foto${count == 1 ? '' : 's'} erfolgreich hinzugefügt! 📸'),
+              backgroundColor: AppColors.turquoiseSecondary,
+            ),
+          );
         }
       }
     } catch (e) {
@@ -85,7 +109,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
     return Scaffold(
       backgroundColor: isDark ? AppColors.bgDark : AppColors.bgLight,
       appBar: AppBar(
-        titleSpacing: 16,
+        titleSpacing: 12,
         title: _isSearching
             ? Container(
                 height: 44,
@@ -126,61 +150,68 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                   onChanged: (val) => galleryNotifier.setSearchQuery(val),
                 ),
               )
-            : Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      gradient: AppColors.pinkGradient,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.pinkPrimary.withValues(alpha: 0.35),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: const Text('📸', style: TextStyle(fontSize: 16)),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'PhotoKids',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -0.3,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  if (settingsState.isKidMode)
+            : FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: AppColors.yellowLight,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.yellowDark.withValues(alpha: 0.3)),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('👧', style: TextStyle(fontSize: 11)),
-                          SizedBox(width: 3),
-                          Text(
-                            'Kids',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFF6B4E00),
-                            ),
+                        gradient: AppColors.pinkGradient,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.pinkPrimary.withValues(alpha: 0.35),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
+                      child: const Text('📸', style: TextStyle(fontSize: 16)),
                     ),
-                ],
+                    const SizedBox(width: 8),
+                    const Text(
+                      'PhotoKids',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                    if (settingsState.isKidMode) ...[
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: AppColors.yellowLight,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppColors.yellowDark.withValues(alpha: 0.3)),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('👧', style: TextStyle(fontSize: 11)),
+                            SizedBox(width: 3),
+                            Text(
+                              'Kids',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF6B4E00),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
         actions: [
           IconButton(
+            visualDensity: VisualDensity.compact,
             icon: Icon(
               Theme.of(context).brightness == Brightness.dark
                   ? Icons.light_mode_rounded
@@ -196,18 +227,21 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
             },
           ),
           IconButton(
+            visualDensity: VisualDensity.compact,
             icon: const Icon(Icons.install_mobile_rounded, color: AppColors.turquoiseSecondary),
             tooltip: 'App aufs Handy laden 📲 (Android / Apple)',
             onPressed: () => InstallAppDialog.show(context),
           ),
           if (!_isSearching)
             IconButton(
+              visualDensity: VisualDensity.compact,
               icon: const Icon(Icons.search_rounded),
               tooltip: 'Suche',
               onPressed: () => setState(() => _isSearching = true),
             ),
           // View Options & Grid Zoom Popup
           PopupMenuButton<String>(
+            padding: EdgeInsets.zero,
             icon: Icon(
               galleryState.viewMode == GalleryViewMode.grid
                   ? Icons.grid_view_rounded
@@ -291,29 +325,63 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
           ),
         ],
       ),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          gradient: AppColors.pinkGradient,
-          borderRadius: BorderRadius.circular(28),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.pinkPrimary.withValues(alpha: 0.4),
-              blurRadius: 14,
-              offset: const Offset(0, 6),
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // KI Zauberbild Button
+          Container(
+            decoration: BoxDecoration(
+              gradient: AppColors.purpleGradient,
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.purpleAccent.withValues(alpha: 0.35),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: FloatingActionButton.extended(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
-          onPressed: _pickAndImportImages,
-          icon: const Icon(Icons.add_photo_alternate_rounded, size: 24),
-          label: const Text(
-            'Fotos hinzufügen',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+            child: FloatingActionButton.extended(
+              heroTag: 'ai_magic_btn',
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              onPressed: () => AiMagicGeneratorDialog.show(context),
+              icon: const Text('🪄', style: TextStyle(fontSize: 20)),
+              label: const Text(
+                'Zaubern ✨',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+              ),
+            ),
           ),
-        ),
+          const SizedBox(width: 10),
+          // Fotos vom Handy hinzufügen Button
+          Container(
+            decoration: BoxDecoration(
+              gradient: AppColors.pinkGradient,
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.pinkPrimary.withValues(alpha: 0.35),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: FloatingActionButton.extended(
+              heroTag: 'add_photos_btn',
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              onPressed: _pickAndImportImages,
+              icon: const Icon(Icons.add_photo_alternate_rounded, size: 22),
+              label: const Text(
+                'Fotos 📸',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -350,6 +418,40 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                     isSelected: state.currentTab == GalleryFilterTab.trash,
                     onTap: () => notifier.setFilterTab(GalleryFilterTab.trash),
                     isDark: isDark,
+                  ),
+                  const SizedBox(width: 8),
+                  // Zauberbild Shortcut
+                  GestureDetector(
+                    onTap: () => AiMagicGeneratorDialog.show(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        gradient: AppColors.purpleGradient,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.purpleAccent.withValues(alpha: 0.3),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('🪄', style: TextStyle(fontSize: 13)),
+                          SizedBox(width: 4),
+                          Text(
+                            'KI Zaubern ✨',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -652,12 +754,16 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
             ),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Row(
-                children: [
-                  Text('📅 ${dateFormat.format(photo.dateTaken)}', style: const TextStyle(fontSize: 12)),
-                  const SizedBox(width: 8),
-                  Text('💾 $sizeMb MB', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                ],
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  children: [
+                    Text('📅 ${dateFormat.format(photo.dateTaken)}', style: const TextStyle(fontSize: 12)),
+                    const SizedBox(width: 8),
+                    Text('💾 $sizeMb MB', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                  ],
+                ),
               ),
             ),
             trailing: Row(
@@ -665,12 +771,16 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
               children: [
                 if (!photo.isDeleted)
                   IconButton(
+                    constraints: const BoxConstraints(),
+                    padding: const EdgeInsets.all(6),
                     icon: Icon(
                       photo.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
                       color: photo.isFavorite ? AppColors.pinkPrimary : Colors.grey,
+                      size: 22,
                     ),
                     onPressed: () => notifier.toggleFavorite(photo),
                   ),
+                const SizedBox(width: 4),
                 const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.grey),
               ],
             ),
@@ -744,10 +854,23 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                 style: TextStyle(fontSize: 15, color: Colors.grey),
               ),
               const SizedBox(height: 24),
-              KidButton(
-                label: 'Fotos hinzufügen 🎨',
-                icon: const Icon(Icons.add_photo_alternate_rounded),
-                onPressed: _pickAndImportImages,
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 12,
+                runSpacing: 10,
+                children: [
+                  KidButton(
+                    label: 'KI Zaubern 🪄',
+                    icon: const Text('✨'),
+                    backgroundColor: AppColors.purpleAccent,
+                    onPressed: () => AiMagicGeneratorDialog.show(context),
+                  ),
+                  KidButton(
+                    label: 'Fotos hinzufügen 🎨',
+                    icon: const Icon(Icons.add_photo_alternate_rounded),
+                    onPressed: _pickAndImportImages,
+                  ),
+                ],
               ),
             ],
           ),

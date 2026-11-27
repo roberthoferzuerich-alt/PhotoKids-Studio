@@ -9,19 +9,20 @@
 ## 📑 Inhaltsverzeichnis
 1. [📱 Erste Schritte & Navigation](#1--erste-schritte--navigation)
 2. [🖼️ Fotogalerie & Organisation](#2-️-fotogalerie--organisation)
-3. [🔍 Fotos ansehen im Detail (Viewer)](#3--fotos-ansehen-im-detail-viewer)
-4. [🎨 Der Kreative Studio-Editor](#4--der-kreative-studio-editor)
+3. [🪄 KI Zauber-Pinsel (Bilder mit Sprache & Text herzaubern)](#3--ki-zauber-pinsel-bilder-mit-sprache--text-herzaubern)
+4. [🔍 Fotos ansehen im Detail (Viewer)](#4--fotos-ansehen-im-detail-viewer)
+5. [🎨 Der Kreative Studio-Editor](#5--der-kreative-studio-editor)
    - [🖼️ Magische Bilderrahmen](#-magische-bilderrahmen)
    - [🖍️ Malbuch-Modus (Ausmalbilder)](#-malbuch-modus-ausmalbilder)
    - [↔️ Vorher / Nachher Vergleichs-Slider](#️-vorher--nachher-vergleichs-slider)
    - [💬 Comic-Sprechblasen & Sticker](#-comic-sprechblasen--sticker)
    - [🌐 Web- & Social-Media Fotogrößen](#-web--social-media-fotogrößen)
    - [🎉 Konfetti & Haptik beim Speichern](#-konfetti--haptik-beim-speichern)
-5. [💌 Grußkarten & Druck-Vorbereitung](#5--grußkarten--druck-vorbereitung)
-6. [📚 Eigene Alben verwalten](#6--eigene-alben-verwalten)
-7. [🎬 Automatische Diashow](#7--automatische-diashow)
-8. [🔒 Eltern-Bereich & Kindermodus](#8--eltern-bereich--kindermodus)
-9. [👨‍💻 Über den Entwickler & Kontakt](#9--über-den-entwickler--kontakt)
+6. [💌 Grußkarten & Druck-Vorbereitung](#6--grußkarten--druck-vorbereitung)
+7. [📚 Eigene Alben verwalten](#7--eigene-alben-verwalten)
+8. [🎬 Automatische Diashow](#8--automatische-diashow)
+9. [🔒 Eltern-Bereich & Kindermodus](#9--eltern-bereich--kindermodus)
+10. [👨‍💻 Über den Entwickler & Kontakt](#10--über-den-entwickler--kontakt)
 
 ---
 
@@ -31,7 +32,7 @@ Beim Starten von PhotoKids Studio findest du am unteren Bildschirmrand die Haupt
 
 | Menüpunkt | Symbol | Funktion |
 | :--- | :---: | :--- |
-| **Galerie** | 🖼️ | Alle deine Fotos in flexiblen Rastern mit Suche und Filter |
+| **Galerie** | 🖼️ | Alle deine Fotos in flexiblen Rastern mit Suche, Filtern und KI-Zauberpinsel |
 | **Alben** | 📚 | Bunte Foto-Alben mit Emojis für Themen (Tiere, Urlaub, Partys) |
 | **Diashow** | 🎬 | Entspanntes automatisches Abspielen deiner Lieblingserinnerungen |
 | **Eltern** | ⚙️ | PIN-geschützte Sicherheitseinstellungen und Infos zum Entwickler |
@@ -44,23 +45,55 @@ Beim Starten von PhotoKids Studio findest du am unteren Bildschirmrand die Haupt
 ## 2. 🖼️ Fotogalerie & Organisation
 
 ### Spaltenanzahl anpassen (Zoom)
-* Oben in der Leiste befindet sich ein **Schieberegler**, mit dem du zwischen **2, 3 und 4 Spalten** umschalten kannst:
+* Oben in der Leiste über das Menü-Symbol kannst du flexibel zwischen **2, 3 und 4 Spalten** wählen:
   - **2 Spalten:** Extra große Vorschaubilder – ideal für kleine Kinderhände.
   - **3 oder 4 Spalten:** Perfekte Übersicht für größere Fotosammlungen.
-* Alternativ kannst du über das Symbol oben rechts direkt zwischen **Raster-** und **Listenansicht** wechseln.
+* Alternativ kannst du direkt zwischen **Raster-** und **Listenansicht** wechseln.
 
 ### Tabs & Filter
-* **Alle Fotos 🌟:** Zeigt deine gesamte Bildersammlung.
+* **Alle Fotos 🌟:** Zeigt deine gesamte Bildersammlung inklusive Anzahl.
 * **Favoriten ⭐:** Zeigt nur Bilder, die du mit einem Herzchen markiert hast.
 * **Papierkorb 🗑️:** Hier landen gelöschte Fotos. Sie werden **30 Tage lang sicher aufbewahrt** und können mit einem Klick wiederhergestellt werden.
+* **KI Zaubern ✨:** Schneller Direktzugriff auf den Zauberpinsel direkt in der Filterleiste.
 
 ### Suche & Sortierung
 * Tippe auf die **Lupe 🔍**, um Fotos nach Namen oder Suchbegriffen zu filtern.
-* Über das Sortier-Menü kannst du nach *Neueste zuerst*, *Älteste zuerst*, *Name (A–Z)* oder *Favoriten zuerst* sortieren.
+* Über das Sortier-Menü kannst du nach *Neueste zuerst*, *Älteste zuerst*, *Name (A–Z)*, *Dateigröße* oder *Favoriten zuerst* sortieren.
+
+### Fotos vom Smartphone hinzufügen 📸
+* Tippe unten rechts auf den pinken Knopf **„Fotos 📸“**.
+* Es öffnet sich direkt die vollständige Android-/iOS-Fotogalerie deines Smartphones (Kamera-Bilder, WhatsApp, Downloads, etc.).
+* Halte ein Bild kurz gedrückt, um beliebig viele Fotos gleichzeitig auszuwählen und in PhotoKids Studio zu importieren.
+* Alle importierten Bilder werden dauerhaft im geschützten App-Speicher gesichert und gehen auch bei einer System-Cache-Bereinigung nicht verloren.
 
 ---
 
-## 3. 🔍 Fotos ansehen im Detail (Viewer)
+## 3. 🪄 KI Zauber-Pinsel (Bilder mit Sprache & Text herzaubern)
+
+Mit dem **KI Zauber-Pinsel** können Kinder eigene Fantasiewelten erschaffen – **100 % kostenlos, ohne Benutzerkonto und ohne laufende Kosten!**
+
+### So funktioniert das Zaubern:
+1. Tippe unten rechts auf den lila Knopf **„Zaubern ✨“** (oder oben in der Filterleiste auf *„🪄 KI Zaubern ✨“*).
+2. **Text- oder Spracheingabe 🎙️:**
+   - **Tippen:** Gib deinen Bildwunsch ein (z. B. *„Einhorn im Weltall“* oder *„Lustiger Dino mit Mütze“*). Ein Druck auf die **Enter-Taste** schließt die Tastatur und startet sofort die Generierung!
+   - **Sprechen 🎙️:** Tippe auf das Mikrofon-Symbol auf deiner Handy-Tastatur, um deinen Wunsch einfach mit der Stimme einzusprechen.
+3. **Ideen-Vorschläge:** Tippe einfach auf einen der bunten Themen-Chips (z. B. *„🦄 Einhorn im Zauberwald“*, *„🚀 Astronauten-Katze“*, *„🍦 Riesen-Eisbecher“*).
+4. **Wähle deinen Kunststil:**
+   - **Pixar 3D 🎨:** Farbenfroher, warm beleuchteter 3D-Animationsstil wie im Kino (Standard).
+   - **Zeichentrick 🖌️:** Bunte Kinderbuch-Illustration mit klaren, lebendigen Konturen.
+   - **Zauberhaft ✨:** Verträumte Märchenwelt mit sanftem Feenglanz und Glitzersternen.
+   - **Foto 📷:** Helle, farbenfrohe und gestochen scharfe Fotografie.
+5. Tippe auf **„Bild herzaubern! 🎨“**.
+6. **Zuverlässige Technologie im Hintergrund:**
+   - Die App optimiert die Auflösung automatisch (768×768 Pixel) für blitzschnelle Ladezeiten von nur 3 bis 5 Sekunden.
+   - Durch einen intelligenten **3-Stufen-Fallback** wechselt die App bei hoher Serverauslastung im Hintergrund automatisch auf das Turbomodell, sodass die Generierung zuverlässig beim ersten Versuch gelingt.
+7. **Ergebnis bewundern & Verzieren:**
+   - Das fertige Bild wird sofort automatisch in der Galerie gespeichert.
+   - Über den Button **„Ansehen & Verzieren 🎨“** kannst du das neue Kunstwerk direkt im Kreativ-Studio öffnen und mit Rahmen, Stickern oder Text weitergestalten!
+
+---
+
+## 4. 🔍 Fotos ansehen im Detail (Viewer)
 
 Tippe auf ein Foto in der Galerie, um es in voller Größe zu öffnen:
 
@@ -76,7 +109,7 @@ Tippe auf ein Foto in der Galerie, um es in voller Größe zu öffnen:
 
 ---
 
-## 4. 🎨 Der Kreative Studio-Editor
+## 5. 🎨 Der Kreative Studio-Editor
 
 Der Studio-Editor ist das Herzstück für kleine Künstler. Hier kannst du Fotos verzaubern!
 
@@ -127,7 +160,7 @@ Tippe in der Werkzeugleiste auf **Rahmen 🖼️**, um dein Foto mit handgezeich
 
 ---
 
-## 5. 💌 Grußkarten & Druck-Vorbereitung
+## 6. 💌 Grußkarten & Druck-Vorbereitung
 
 Ob zum Geburtstag, für die Großeltern oder aus dem Urlaub: Mit der Grußkarten-Funktion erstellst du in Sekunden persönliche Fotopostkarten zum Ausdrucken oder Verschicken:
 
@@ -144,7 +177,7 @@ Ob zum Geburtstag, für die Großeltern oder aus dem Urlaub: Mit der Grußkarten
 
 ---
 
-## 6. 📚 Eigene Alben verwalten
+## 7. 📚 Eigene Alben verwalten
 
 Im Tab **Alben 📚** lassen sich Fotos übersichtlich thematisch sortieren:
 * Tippe unten rechts auf den runden Knopf **„+ Neues Album“**.
@@ -153,7 +186,7 @@ Im Tab **Alben 📚** lassen sich Fotos übersichtlich thematisch sortieren:
 
 ---
 
-## 7. 🎬 Automatische Diashow
+## 8. 🎬 Automatische Diashow
 
 * Tippe in der Navigationsleiste auf **Diashow 🎬**.
 * Die App spielt alle Fotos automatisch nacheinander ab – ungestört im Vollbild mit sanften Übergängen.
@@ -161,7 +194,7 @@ Im Tab **Alben 📚** lassen sich Fotos übersichtlich thematisch sortieren:
 
 ---
 
-## 8. 🔒 Eltern-Bereich & Kindermodus
+## 9. 🔒 Eltern-Bereich & Kindermodus
 
 Im Tab **Eltern ⚙️** haben Mama und Papa die volle Kontrolle über die App:
 
@@ -177,7 +210,7 @@ Im Tab **Eltern ⚙️** haben Mama und Papa die volle Kontrolle über die App:
 
 ---
 
-## 9. 👨‍💻 Über den Entwickler & Kontakt
+## 10. 👨‍💻 Über den Entwickler & Kontakt
 
 PhotoKids Studio wurde in Zürich für Denis und die ganze Familie entwickelt.
 

@@ -11,6 +11,7 @@ class AppColors {
 
   // Secondary Palette
   static const Color turquoiseSecondary = Color(0xFF00C4B4);
+  static const Color turquoisePrimary = turquoiseSecondary;
   static const Color turquoiseLight = Color(0xFF64FFDA);
   static const Color turquoiseDark = Color(0xFF00897B);
   static const Color turquoiseSoft = Color(0xFFE0F7F6);

@@ -37,14 +37,22 @@ Gleichzeitig bietet die App Eltern maximale Sicherheit durch einen **PIN-geschü
 * **Sortierung & Suche:** Nach Datum, Name (A–Z), Dateigröße oder Favoriten zuerst sowie Live-Suchleiste.
 * **Alben-System:** Eigene Alben mit bunten Emojis (🏖️, 🐶, 🎂, 🚀) erstellen.
 * **Favoriten- & Papierkorb-Tabs:** Markiere Bilder als *Favoriten ⭐* oder stelle gelöschte Fotos innerhalb von **30 Tagen** wieder her.
+* **Permanenter Foto-Import:** Beliebig viele Fotos aus der nativen Smartphone-Galerie markieren und dauerhaft geschützt in die App importieren.
 
-### 🔍 2. Professioneller Bildviewer
+### 🪄 2. KI Zauber-Pinsel (100 % kostenlos)
+* **Text & Spracheingabe 🎙️:** Kinder können Wünsche frei eintippen oder über das Tastatur-Mikrofon einsprechen.
+* **Kinder-Ideen & Stile:** Bunte Vorlagen-Chips (Einhorn, Dino, Astronaut) und 4 Kunststile (*Pixar 3D 🎨*, *Zeichentrick 🖌️*, *Zauberhaft ✨*, *Foto 📷*).
+* **0,- € Kosten:** Keine Registrierung, kein API-Key, keine Kosten (über offene Pollinations AI Engine).
+* **Automatischer Fallback & Speed:** 768×768 px für 3–5 Sek. Ladezeit mit automatischem Turbo-Fallback bei Serverlast.
+* **Direkt im Studio weitergestalten:** Gezauberte Bilder werden automatisch in der Galerie gespeichert und können direkt verziert werden.
+
+### 🔍 3. Professioneller Bildviewer
 * **Pinch-to-Zoom & Double-Tap:** Stufenlose Skalierung von 0.8x bis 5.0x via `InteractiveViewer`.
 * **EXIF-Inspektor:** Auflösung, Format, Dateigröße und Aufnahmedatum auf einen Blick.
 * **Vollbildmodus & Bilddrehung:** Automatische Ausblendung der Navigationselemente für ungestörtes Betrachten.
 * **Direktzugriff:** Bearbeiten 🎨, Web-Größe 🌐 und Diashow 🎬 direkt am unteren Bildschirmrand.
 
-### 🎨 3. Kreativer Studio-Editor
+### 🎨 4. Kreativer Studio-Editor
 * **🖼️ Magische Bilderrahmen:** Handgezeichnete Vektor-Rahmen (*Einhorn Glitzer 🦄*, *Weltraum Rakete 🚀*, *Sommerstrand 🏖️*, *Geburtstagsparty 🎂*, *Zauberwald 🌸*, *Comic Hero 💥*).
 * **🖍️ Malbuch-Modus:** Verwandelt jedes Foto in eine saubere schwarz-weiße Ausmalseite mit Stift-, Marker- und Pinsel-Unterstützung.
 * **↔️ Vorher / Nachher Vergleich:** Interaktiver Split-Schieberegler `‹ 🔍 ›` zum direkten Vergleichen des Originals mit dem Kunstwerk.
@@ -54,15 +62,15 @@ Gleichzeitig bietet die App Eltern maximale Sicherheit durch einen **PIN-geschü
 * **✂️ Zuschnitt & Farbkorrektur:** Formate (1:1, 4:3, 16:9, 9:16, 3:2, 2:1) sowie Helligkeit, Kontrast und Sättigung.
 * **🎉 Konfetti-Feuerwerk:** Farbenfroher Partikel-Regen und haptisches Feedback bei jedem Speichern.
 
-### 💌 4. 1-Klick Grußkarten & Druck
+### 💌 5. 1-Klick Grußkarten & Druck
 * Fertig formatierte Vorlagen für Oma & Opa ❤️, Mama & Papa 💖, Geburtstage 🎂 oder Feriengrüße 🏖️ mit Direktexport zum Drucken oder Verschicken per Messenger.
 
-### 👧 5. Kindgerechte Ergonomie & Elternschutz
+### 👧 6. Kindgerechte Ergonomie & Elternschutz
 * **Material Design 3:** Buntes Farbschema mit Rosa, Türkis, Gelb und Violett.
 * **Parental Gate:** Kindersicherung über Eltern-PIN oder mathematische Rechenaufgabe zur Absicherung kritischer Aktionen.
 * **SafeArea-Kompatibel:** Zuverlässig optimiert gegen Überdeckungen durch Android-Systemleisten.
 
-### ⏱️ 6. Diashow (Slideshow)
+### ⏱️ 7. Diashow (Slideshow)
 * Automatische Vollbild-Wiedergabe mit anpassbarer Geschwindigkeit (1 bis 10 Sekunden) und sanften Überblendungen.
 
 ---
