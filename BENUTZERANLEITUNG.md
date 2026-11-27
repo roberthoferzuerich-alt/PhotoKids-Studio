@@ -212,7 +212,7 @@ Im Tab **Eltern ⚙️** haben Mama und Papa die volle Kontrolle über die App:
 
 ## 10. 👨‍💻 Über den Entwickler & Kontakt
 
-PhotoKids Studio wurde in Zürich für Denis und die ganze Familie entwickelt.
+PhotoKids Studio wurde in Zürich für Denise und die ganze Familie entwickelt.
 
 * **Entwickler:** Robert Hofer
 * **Wohnort:** Zürich, Schweiz 🇨🇭

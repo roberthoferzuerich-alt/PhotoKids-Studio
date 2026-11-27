@@ -23,7 +23,7 @@
 
 ## 🌟 Über das Projekt
 
-**PhotoKids Studio** wurde mit ganz viel Liebe von **Robert Hofer (Zürich, Schweiz 🇨🇭)** für seine Tochter Denis und die ganze Familie entworfen. Kinder können ihre Lieblingsfotos in einer sicheren, fröhlichen Umgebung eigenständig erkunden, organisieren und mit zauberhaften Werkzeugen kreativ bearbeiten.
+**PhotoKids Studio** wurde mit ganz viel Liebe von **Robert Hofer (Zürich, Schweiz 🇨🇭)** für seine Tochter Denise und die ganze Familie entworfen. Kinder können ihre Lieblingsfotos in einer sicheren, fröhlichen Umgebung eigenständig erkunden, organisieren und mit zauberhaften Werkzeugen kreativ bearbeiten.
 
 Gleichzeitig bietet die App Eltern maximale Sicherheit durch einen **PIN-geschützten Elternbereich**, sodass keine Fotos unabsichtlich gelöscht oder Systemeinstellungen verändert werden können. Unter der Haube sorgt eine performante SQLite-Architektur mit Hintergrund-Isolates und Thumbnail-Caching dafür, dass selbst Sammlungen mit **über 10.000 Fotos** butterweich mit 60 FPS dargestellt werden.
 

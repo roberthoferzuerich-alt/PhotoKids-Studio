@@ -225,7 +225,7 @@ class AboutMeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 14),
                   const Text(
-                    'PhotoKids Studio ist ein echtes Herzensprojekt. Entwickelt mit ganz viel Liebe für meine Tochter Denis '
+                    'PhotoKids Studio ist ein echtes Herzensprojekt. Entwickelt mit ganz viel Liebe für meine Tochter Denise '
                     'und unsere Familie – als sichere, bunte und kreative Heimat für unsere wertvollsten Fotos und Erinnerungen.',
                     style: TextStyle(fontSize: 14, height: 1.45),
                   ),
@@ -397,7 +397,7 @@ class AboutMeScreen extends StatelessWidget {
             // Footer
             Center(
               child: Text(
-                'PhotoKids Studio v1.0.1 • Zürich 🇨🇭\nEntwickelt mit Liebe für Denis & die ganze Familie',
+                'PhotoKids Studio v1.0.1 • Zürich 🇨🇭\nEntwickelt mit Liebe für Denise & die ganze Familie',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 12,
